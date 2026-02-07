@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARVI Power - Quotation Generator</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-section">
+                <img src="/assets/IMG-20260205-WA0005.jpg" alt="ARVI Power" class="logo">
+                <div class="brand-info">
+                    <h1>Quotation Generator</h1>
+                    <p>ARVI Systems & Controls Pvt. Ltd.</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button type="button" class="btn btn-secondary" id="previewBtn">
+                    <span class="icon">👁</span> Preview
+                </button>
+                <button type="button" class="btn btn-primary" id="generateBtn">
+                    <span class="icon">📄</span> Generate PDF
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Form -->
+        <main class="main-content">
+            <form id="quotationForm">
+
+                <!-- Quote Reference (Page 1 Editable Section) -->
+                <section class="form-section">
+                    <div class="section-header">
+                        <h2><span class="section-icon">📋</span> Quotation Reference</h2>
+                    </div>
+                    <p class="section-desc">This text will appear below the header on Page 1 of the quotation</p>
+                    <div class="form-grid cols-3">
+                        <div class="form-group">
+                            <label for="quoteNumber">Quotation No.</label>
+                            <input type="text" id="quoteNumber" name="quoteNumber" placeholder="ARVI/2026/001" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="quoteDate">Date</label>
+                            <input type="date" id="quoteDate" name="quoteDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerRef">Customer Ref</label>
+                            <input type="text" id="customerRef" name="customerRef" placeholder="Customer reference">
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="referenceText">Reference Details (Site visits, meetings, etc.)</label>
+                        <textarea id="referenceText" name="referenceText" rows="4" placeholder="Dear Sir/Madam,
+
+With reference to your enquiry and our site visit dated ________, we are pleased to submit our quotation for the following:
+
+[Add any other reference details here]"></textarea>
+                    </div>
+                    <div class="form-grid cols-2">
+                        <div class="form-group">
+                            <label for="customerName">Customer / Company Name</label>
+                            <input type="text" id="customerName" name="customerName" placeholder="Enter company name"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerAddress">Address</label>
+                            <input type="text" id="customerAddress" name="customerAddress" placeholder="City, State">
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="kindAttn">Kind Attention</label>
+                        <input type="text" id="kindAttn" name="kindAttn" placeholder="Mr./Ms. Name, Designation">
+                    </div>
+                </section>
+
+                <!-- Product Options (Page 5 - Quotation Table) -->
+                <section class="form-section">
+                    <div class="section-header">
+                        <h2><span class="section-icon">⚡</span> Option I - Quotation Items</h2>
+                        <button type="button" class="btn btn-small btn-add" id="addItemBtn">+ Add Row</button>
+                    </div>
+
+                    <div class="form-grid cols-2">
+                        <div class="form-group">
+                            <label for="optionTitle">Option Title</label>
+                            <input type="text" id="optionTitle" name="optionTitle" value="PFC-XR303"
+                                placeholder="e.g., PFC-XR303">
+                        </div>
+                        <div class="form-group">
+                            <label for="optionSubtitle">Subtitle/Description</label>
+                            <input type="text" id="optionSubtitle" name="optionSubtitle"
+                                value="This is a power-conditioning topology Online UPS - specially designed for laser cutting machines."
+                                placeholder="Brief description">
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="optionDetails">Technical Details (Bullet points)</label>
+                        <textarea id="optionDetails" name="optionDetails" rows="6" placeholder="VFI power-conditioning topology with galvanic isolation for comprehensive power protection
+• Galvanic isolation at the output for comprehensive power protection
+• Generator compatible with all KVA and Power Factor
+• Long life, designed for maintenance and environment
+• Fully DSP Controlled
+• HF/VHF IGBT based inverter (Operated in Zero current switching, Interleaved)">VFI power-conditioning topology with galvanic isolation for comprehensive power protection.
+The downtime in a process is not only due to failure of power but also due to breakdown of any machines in the production line - mainly the failure of electrical or electronic parts in the machine.
+Power experts attribute this failure to the poor quality of power.
+
+• Galvanic isolation at the output for comprehensive power protection
+• Generator compatible with all KVA and Power Factor
+• Long life, designed for maintenance and environment
+• Fully DSP Controlled
+• HF/VHF IGBT based inverter (Operated in Zero current switching, Interleaved)</textarea>
+                    </div>
+
+                    <div id="itemsContainer">
+                        <table class="items-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 60px;">Sl No</th>
+                                    <th>Description</th>
+                                    <th style="width: 100px;">Unit Price</th>
+                                    <th style="width: 70px;">Qty</th>
+                                    <th style="width: 100px;">Value</th>
+                                    <th style="width: 50px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="itemsTableBody">
+                                <tr class="item-row" data-index="0">
+                                    <td><input type="text" name="items[0][slno]" value="1" class="input-small"></td>
+                                    <td><textarea name="items[0][description]" rows="2"
+                                            placeholder="Description of item..."></textarea></td>
+                                    <td><input type="number" name="items[0][unitPrice]" class="price-input"
+                                            placeholder="0" onchange="calculateItemValue(0); calculateTotal();"></td>
+                                    <td><input type="number" name="items[0][qty]" value="1" min="1" class="qty-input"
+                                            onchange="calculateItemValue(0); calculateTotal();"></td>
+                                    <td><input type="text" name="items[0][value]" readonly class="value-input"></td>
+                                    <td><button type="button" class="btn-remove" onclick="removeItem(0)">✕</button></td>
+                                </tr>
+                                <tr class="item-row" data-index="1">
+                                    <td><input type="text" name="items[1][slno]" value="1a" class="input-small"></td>
+                                    <td><textarea name="items[1][description]" rows="2"
+                                            placeholder="Sub-item description..."></textarea></td>
+                                    <td><input type="number" name="items[1][unitPrice]" class="price-input"
+                                            placeholder="0" onchange="calculateItemValue(1); calculateTotal();"></td>
+                                    <td><input type="number" name="items[1][qty]" value="1" min="1" class="qty-input"
+                                            onchange="calculateItemValue(1); calculateTotal();"></td>
+                                    <td><input type="text" name="items[1][value]" readonly class="value-input"></td>
+                                    <td><button type="button" class="btn-remove" onclick="removeItem(1)">✕</button></td>
+                                </tr>
+                                <tr class="item-row" data-index="2">
+                                    <td><input type="text" name="items[2][slno]" value="1b" class="input-small"></td>
+                                    <td><textarea name="items[2][description]" rows="2"
+                                            placeholder="Sub-item description..."></textarea></td>
+                                    <td><input type="number" name="items[2][unitPrice]" class="price-input"
+                                            placeholder="0" onchange="calculateItemValue(2); calculateTotal();"></td>
+                                    <td><input type="number" name="items[2][qty]" value="1" min="1" class="qty-input"
+                                            onchange="calculateItemValue(2); calculateTotal();"></td>
+                                    <td><input type="text" name="items[2][value]" readonly class="value-input"></td>
+                                    <td><button type="button" class="btn-remove" onclick="removeItem(2)">✕</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Total Amount Section -->
+                    <div class="total-section">
+                        <div class="total-row">
+                            <span class="total-label">Subtotal:</span>
+                            <span class="total-value" id="subtotalDisplay">₹ 0.00</span>
+                            <input type="hidden" id="subtotal" name="subtotal" value="0">
+                        </div>
+                        <div class="total-row">
+                            <span class="total-label">GST (18%):</span>
+                            <span class="total-value" id="gstDisplay">₹ 0.00</span>
+                            <input type="hidden" id="gstAmount" name="gstAmount" value="0">
+                        </div>
+                        <div class="total-row grand-total">
+                            <span class="total-label">Grand Total:</span>
+                            <span class="total-value" id="grandTotalDisplay">₹ 0.00</span>
+                            <input type="hidden" id="grandTotal" name="grandTotal" value="0">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Option II (Optional) -->
+                <section class="form-section collapsible">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <h2><span class="section-icon">⚡</span> Option II (Optional)</h2>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="section-content">
+                        <div class="form-grid cols-2">
+                            <div class="form-group">
+                                <label for="option2Title">Option II Title</label>
+                                <input type="text" id="option2Title" name="option2Title"
+                                    placeholder="e.g., PFC-XR303HS">
+                            </div>
+                            <div class="form-group">
+                                <label for="option2Subtitle">Subtitle</label>
+                                <input type="text" id="option2Subtitle" name="option2Subtitle"
+                                    placeholder="Premium model - custom design by Arvi">
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="option2Details">Details</label>
+                            <textarea id="option2Details" name="option2Details" rows="3"
+                                placeholder="designed by a team of Arvi's in-house R&D engineers..."></textarea>
+                        </div>
+                        <div id="option2ItemsContainer">
+                            <table class="items-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 60px;">Sl No</th>
+                                        <th>Description</th>
+                                        <th style="width: 100px;">Unit Price</th>
+                                        <th style="width: 70px;">Qty</th>
+                                        <th style="width: 100px;">Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="option2TableBody">
+                                    <tr>
+                                        <td><input type="text" name="option2Items[0][slno]" value="2"
+                                                class="input-small"></td>
+                                        <td><textarea name="option2Items[0][description]" rows="2"
+                                                placeholder="Description..."></textarea></td>
+                                        <td><input type="number" name="option2Items[0][unitPrice]" class="price-input"
+                                                placeholder="0"></td>
+                                        <td><input type="number" name="option2Items[0][qty]" value="1" min="1"
+                                                class="qty-input"></td>
+                                        <td><input type="text" name="option2Items[0][value]" readonly
+                                                class="value-input"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="note-text">Cost of batteries and batteries stand <strong>remains same</strong> as
+                            mentioned in 1b to 1f.</p>
+                    </div>
+                </section>
+
+                <!-- Terms & Conditions -->
+                <section class="form-section">
+                    <div class="section-header">
+                        <h2><span class="section-icon">📝</span> Terms & Conditions</h2>
+                    </div>
+                    <div class="form-grid cols-2">
+                        <div class="form-group">
+                            <label for="priceLocation">Price</label>
+                            <input type="text" id="priceLocation" name="priceLocation" value="For Bangalore">
+                        </div>
+                        <div class="form-group">
+                            <label for="gstTerms">GST</label>
+                            <input type="text" id="gstTerms" name="gstTerms"
+                                value="18% extra on UPS, batteries and battery stand.">
+                        </div>
+                        <div class="form-group">
+                            <label for="delivery">Delivery</label>
+                            <input type="text" id="delivery" name="delivery" placeholder="e.g., 2-3 weeks">
+                        </div>
+                        <div class="form-group">
+                            <label for="payment">Payment</label>
+                            <input type="text" id="payment" name="payment" placeholder="e.g., 100% Advance">
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="fat">FAT (Factory Acceptance Test)</label>
+                        <textarea id="fat" name="fat" rows="2"
+                            placeholder="Factory Acceptance Test (FAT) - We can arrange for a in-person / video online factory acceptance test of the UPS before despatch...">Factory Acceptance Test (FAT) - We can arrange for a in-person / video online factory acceptance test of the UPS before despatch; we will mail you the test report of the UPS and you could verify the parameters online via video call or in person in our factory.</textarea>
+                    </div>
+                    <div class="form-grid cols-2">
+                        <div class="form-group">
+                            <label for="warranty">Warranty</label>
+                            <input type="text" id="warranty" name="warranty" placeholder="e.g., 2 years">
+                        </div>
+                        <div class="form-group">
+                            <label for="validity">Validity</label>
+                            <input type="text" id="validity" name="validity" value="30 days">
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="updates">Updates</label>
+                        <textarea id="updates" name="updates"
+                            rows="2">You will be updated regularly about the status of progress in production (Image / Video); as the product moves from one section to another, we will send you updates.</textarea>
+                    </div>
+                </section>
+
+                <!-- Signatory -->
+                <section class="form-section">
+                    <div class="section-header">
+                        <h2><span class="section-icon">✍️</span> Signatory</h2>
+                    </div>
+                    <div class="form-grid cols-2">
+                        <div class="form-group">
+                            <label for="signName">Name</label>
+                            <input type="text" id="signName" name="signName" placeholder="e.g., Santosh Relopal">
+                        </div>
+                        <div class="form-group">
+                            <label for="signDesig">Designation</label>
+                            <input type="text" id="signDesig" name="signDesig"
+                                placeholder="e.g., General Manager- OEM Business">
+                        </div>
+                    </div>
+                </section>
+
+            </form>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>© 2026 ARVI Systems & Controls Pvt. Ltd. | 27 Years of Excellence</p>
+        </footer>
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="previewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Quotation Preview</h3>
+                <button class="modal-close" onclick="closePreview()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <iframe id="previewFrame" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p>Generating PDF...</p>
+    </div>
+
+    <script src="/js/app.js"></script>
+</body>
+
+</html>
