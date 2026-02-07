@@ -4,7 +4,7 @@ const ejs = require('ejs');
 const path = require('path');
 const fs = require('fs');
 
-// Chromium executable URL for Vercel
+// Use the official sparticuz chromium releases
 const CHROMIUM_URL = 'https://github.com/nicephil/chromium-bin/releases/download/v133.0.0/chromium-v133.0.0-pack.tar';
 
 // Helper function to convert image to base64
@@ -22,24 +22,50 @@ function imageToBase64(imagePath) {
 
 // Get all asset images as base64
 function getAssetImages() {
-    const assetsDir = path.join(process.cwd(), 'public', 'assets');
+    // Try multiple paths for assets
+    const possiblePaths = [
+        path.join(process.cwd(), 'public', 'assets'),
+        path.join(process.cwd(), 'assets'),
+        path.join(__dirname, '..', 'public', 'assets'),
+        path.join(__dirname, '..', 'assets')
+    ];
+
     const assetImages = {};
-    try {
-        if (fs.existsSync(assetsDir)) {
-            const assetFiles = fs.readdirSync(assetsDir);
-            assetFiles.forEach(file => {
-                if (file.match(/\.(jpg|jpeg|png|gif)$/i)) {
-                    assetImages[file] = imageToBase64(path.join(assetsDir, file));
+
+    for (const assetsDir of possiblePaths) {
+        try {
+            if (fs.existsSync(assetsDir)) {
+                console.log('Found assets at:', assetsDir);
+                const assetFiles = fs.readdirSync(assetsDir);
+                assetFiles.forEach(file => {
+                    if (file.match(/\.(jpg|jpeg|png|gif)$/i)) {
+                        assetImages[file] = imageToBase64(path.join(assetsDir, file));
+                    }
+                });
+                if (Object.keys(assetImages).length > 0) {
+                    break;
                 }
-            });
+            }
+        } catch (error) {
+            console.error('Error reading assets from:', assetsDir, error.message);
         }
-    } catch (error) {
-        console.error('Error reading assets directory:', error.message);
     }
+
+    console.log('Loaded assets:', Object.keys(assetImages).length);
     return assetImages;
 }
 
 module.exports = async (req, res) => {
+    // Set CORS headers
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    // Handle preflight
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
     // Only allow POST
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
@@ -55,13 +81,32 @@ module.exports = async (req, res) => {
             return res.status(400).json({ error: 'Request body is required' });
         }
 
-        console.log('Starting PDF generation...');
+        console.log('Starting PDF generation on Vercel...');
+        console.log('Current working directory:', process.cwd());
 
         // Convert assets to base64 for PDF
         const assetImages = getAssetImages();
 
+        // Find template path
+        const possibleTemplatePaths = [
+            path.join(process.cwd(), 'views', 'quotation-template.ejs'),
+            path.join(__dirname, '..', 'views', 'quotation-template.ejs')
+        ];
+
+        let templatePath = null;
+        for (const p of possibleTemplatePaths) {
+            if (fs.existsSync(p)) {
+                templatePath = p;
+                console.log('Found template at:', p);
+                break;
+            }
+        }
+
+        if (!templatePath) {
+            throw new Error('Template not found. Tried: ' + possibleTemplatePaths.join(', '));
+        }
+
         // Render the EJS template to HTML
-        const templatePath = path.join(process.cwd(), 'views', 'quotation-template.ejs');
         const html = await ejs.renderFile(templatePath, {
             data: quotationData,
             assetsPath: '/assets',
@@ -69,29 +114,40 @@ module.exports = async (req, res) => {
             isBase64: true
         });
 
-        console.log('HTML rendered, launching browser...');
+        console.log('HTML rendered successfully, length:', html.length);
+        console.log('Launching browser...');
+
+        // Configure chromium for serverless
+        chromium.setHeadlessMode = true;
+        chromium.setGraphicsMode = false;
 
         // Launch Puppeteer with chromium-min
         browser = await puppeteer.launch({
-            args: chromium.args,
+            args: [
+                ...chromium.args,
+                '--hide-scrollbars',
+                '--disable-web-security',
+                '--no-sandbox',
+                '--disable-setuid-sandbox'
+            ],
             defaultViewport: chromium.defaultViewport,
             executablePath: await chromium.executablePath(CHROMIUM_URL),
             headless: chromium.headless
         });
 
-        console.log('Browser launched, creating page...');
+        console.log('Browser launched successfully');
         const page = await browser.newPage();
 
         await page.setViewport({ width: 1200, height: 800 });
 
         console.log('Setting page content...');
         await page.setContent(html, {
-            waitUntil: 'domcontentloaded',
+            waitUntil: 'networkidle0',
             timeout: 30000
         });
 
         // Wait for images to render
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 500));
 
         console.log('Generating PDF...');
         const pdfBuffer = await page.pdf({
@@ -106,12 +162,13 @@ module.exports = async (req, res) => {
             preferCSSPageSize: true
         });
 
-        console.log('PDF generated, closing browser...');
+        console.log('PDF generated, size:', pdfBuffer.length, 'bytes');
         await browser.close();
         browser = null;
 
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `attachment; filename="ARVI_Quotation_${quotationData.quoteNumber || 'Q001'}.pdf"`);
+        res.setHeader('Content-Length', pdfBuffer.length);
         res.send(pdfBuffer);
         console.log('PDF sent successfully!');
 
@@ -129,7 +186,8 @@ module.exports = async (req, res) => {
 
         res.status(500).json({
             error: 'Failed to generate PDF',
-            details: error.message
+            details: error.message,
+            stack: error.stack
         });
     }
 };
