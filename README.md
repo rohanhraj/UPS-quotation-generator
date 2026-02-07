@@ -61,7 +61,26 @@ Edit `.env` to customize:
 
 ## Deployment
 
-### Docker (Recommended)
+### Vercel (Recommended)
+
+1. Install Vercel CLI:
+```bash
+npm i -g vercel
+```
+
+2. Deploy:
+```bash
+vercel
+```
+
+3. For production:
+```bash
+vercel --prod
+```
+
+The project is configured with `vercel.json` for serverless functions.
+
+### Docker
 
 ```dockerfile
 FROM node:18-slim

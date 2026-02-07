@@ -1,0 +1,38 @@
+{
+    "version": 2,
+    "buildCommand": "npm install",
+    "installCommand": "npm install",
+    "framework": null,
+    "functions": {
+        "api/generate-pdf.js": {
+            "memory": 1024,
+            "maxDuration": 60
+        },
+        "api/preview.js": {
+            "memory": 512,
+            "maxDuration": 30
+        }
+    },
+    "rewrites": [
+        {
+            "source": "/api/generate-pdf",
+            "destination": "/api/generate-pdf"
+        },
+        {
+            "source": "/api/preview",
+            "destination": "/api/preview"
+        },
+        {
+            "source": "/api/health",
+            "destination": "/api/health"
+        },
+        {
+            "source": "/assets/(.*)",
+            "destination": "/assets/$1"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
+        }
+    ]
+}
