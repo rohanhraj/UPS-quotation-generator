@@ -185,27 +185,87 @@ async function generatePDF() {
     loading.classList.add('active');
 
     try {
-        const response = await fetch('/api/generate-pdf', {
+        // First, get the preview HTML
+        const response = await fetch('/api/preview', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
 
         if (!response.ok) {
-            throw new Error('PDF generation failed');
+            throw new Error('Failed to generate preview');
         }
 
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
+        const html = await response.text();
+
+        // Create a hidden container for rendering
+        const container = document.createElement('div');
+        container.id = 'pdf-render-container';
+        container.style.cssText = 'position: fixed; left: -9999px; top: 0; width: 794px; background: white;';
+        container.innerHTML = html;
+        document.body.appendChild(container);
+
+        // Wait for images to load
+        const images = container.querySelectorAll('img');
+        await Promise.all(Array.from(images).map(img => {
+            if (img.complete) return Promise.resolve();
+            return new Promise((resolve) => {
+                img.onload = resolve;
+                img.onerror = resolve;
+            });
+        }));
+
+        // Give extra time for rendering
+        await new Promise(r => setTimeout(r, 500));
+
+        // Use jsPDF with html2canvas
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+        });
+
+        const pageWidth = 210; // A4 width in mm
+        const pageHeight = 297; // A4 height in mm
+        const margin = 10;
+        const contentWidth = pageWidth - (margin * 2);
+
+        // Capture the container as canvas
+        const canvas = await html2canvas(container, {
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: '#ffffff',
+            logging: false
+        });
+
+        // Calculate dimensions
+        const imgWidth = contentWidth;
+        const imgHeight = (canvas.height * contentWidth) / canvas.width;
+
+        // Split into pages if needed
+        let heightLeft = imgHeight;
+        let position = margin;
+        const pageContentHeight = pageHeight - (margin * 2);
+
+        // Add first page
+        pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', margin, position, imgWidth, imgHeight);
+        heightLeft -= pageContentHeight;
+
+        // Add more pages if needed
+        while (heightLeft > 0) {
+            position = heightLeft - imgHeight + margin;
+            pdf.addPage();
+            pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', margin, position, imgWidth, imgHeight);
+            heightLeft -= pageContentHeight;
+        }
 
         // Download
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `ARVI_Quotation_${data.quoteNumber || 'Q001'}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        pdf.save(`ARVI_Quotation_${data.quoteNumber || 'Q001'}.pdf`);
+
+        // Cleanup
+        document.body.removeChild(container);
 
     } catch (error) {
         console.error('PDF generation error:', error);
