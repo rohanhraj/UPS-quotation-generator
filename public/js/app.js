@@ -185,7 +185,7 @@ async function generatePDF() {
     loading.classList.add('active');
 
     try {
-        // First, get the preview HTML
+        // Get preview HTML from the API (same endpoint as Preview button uses)
         const response = await fetch('/api/preview', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -198,74 +198,60 @@ async function generatePDF() {
 
         const html = await response.text();
 
-        // Create a hidden container for rendering
-        const container = document.createElement('div');
-        container.id = 'pdf-render-container';
-        container.style.cssText = 'position: fixed; left: -9999px; top: 0; width: 794px; background: white;';
-        container.innerHTML = html;
-        document.body.appendChild(container);
+        // Create hidden iframe for rendering
+        const iframe = document.createElement('iframe');
+        iframe.style.cssText = 'position: fixed; left: -9999px; top: 0; width: 794px; height: 1123px; border: none;';
+        document.body.appendChild(iframe);
 
-        // Wait for images to load
-        const images = container.querySelectorAll('img');
-        await Promise.all(Array.from(images).map(img => {
-            if (img.complete) return Promise.resolve();
-            return new Promise((resolve) => {
-                img.onload = resolve;
-                img.onerror = resolve;
-            });
-        }));
+        iframe.contentDocument.open();
+        iframe.contentDocument.write(html);
+        iframe.contentDocument.close();
 
-        // Give extra time for rendering
-        await new Promise(r => setTimeout(r, 500));
-
-        // Use jsPDF with html2canvas
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF({
-            orientation: 'portrait',
-            unit: 'mm',
-            format: 'a4'
+        // Wait for iframe content to load
+        await new Promise(resolve => {
+            iframe.onload = resolve;
+            setTimeout(resolve, 2000); // Fallback timeout
         });
 
-        const pageWidth = 210; // A4 width in mm
-        const pageHeight = 297; // A4 height in mm
-        const margin = 10;
-        const contentWidth = pageWidth - (margin * 2);
+        // Wait extra for images
+        await new Promise(r => setTimeout(r, 1000));
 
-        // Capture the container as canvas
-        const canvas = await html2canvas(container, {
+        // Capture with html2canvas
+        const { jsPDF } = window.jspdf;
+        const canvas = await html2canvas(iframe.contentDocument.body, {
             scale: 2,
             useCORS: true,
             allowTaint: true,
             backgroundColor: '#ffffff',
-            logging: false
+            width: 794,
+            windowWidth: 794
         });
 
-        // Calculate dimensions
-        const imgWidth = contentWidth;
+        // Create PDF
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pageWidth = 210;
+        const pageHeight = 297;
+        const margin = 10;
+        const contentWidth = pageWidth - (margin * 2);
         const imgHeight = (canvas.height * contentWidth) / canvas.width;
 
-        // Split into pages if needed
-        let heightLeft = imgHeight;
-        let position = margin;
-        const pageContentHeight = pageHeight - (margin * 2);
+        let y = margin;
+        let remaining = imgHeight;
+        const usableHeight = pageHeight - (margin * 2);
 
-        // Add first page
-        pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', margin, position, imgWidth, imgHeight);
-        heightLeft -= pageContentHeight;
+        // Add pages
+        pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', margin, y, contentWidth, imgHeight);
+        remaining -= usableHeight;
 
-        // Add more pages if needed
-        while (heightLeft > 0) {
-            position = heightLeft - imgHeight + margin;
+        while (remaining > 0) {
             pdf.addPage();
-            pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', margin, position, imgWidth, imgHeight);
-            heightLeft -= pageContentHeight;
+            y = margin - (imgHeight - remaining);
+            pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', margin, y, contentWidth, imgHeight);
+            remaining -= usableHeight;
         }
 
-        // Download
         pdf.save(`ARVI_Quotation_${data.quoteNumber || 'Q001'}.pdf`);
-
-        // Cleanup
-        document.body.removeChild(container);
+        document.body.removeChild(iframe);
 
     } catch (error) {
         console.error('PDF generation error:', error);
@@ -274,3 +260,4 @@ async function generatePDF() {
         loading.classList.remove('active');
     }
 }
+
