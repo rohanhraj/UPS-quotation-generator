@@ -3,7 +3,11 @@
     "functions": {
         "api/preview.js": {
             "memory": 512,
-            "maxDuration": 30
+            "maxDuration": 30,
+            "includeFiles": [
+                "views/**",
+                "public/assets/**"
+            ]
         },
         "api/health.js": {
             "memory": 128,

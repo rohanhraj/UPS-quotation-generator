@@ -9,6 +9,7 @@ function imageToBase64(imagePath) {
         const ext = path.extname(imagePath).toLowerCase().slice(1);
         const mimeType = ext === 'jpg' ? 'jpeg' : ext;
         return `data:image/${mimeType};base64,${imageBuffer.toString('base64')}`;
+        return '';
     } catch (error) {
         console.error('Error reading image:', imagePath, error.message);
         return '';
@@ -61,9 +62,17 @@ module.exports = async (req, res) => {
         res.send(html);
     } catch (error) {
         console.error('Preview Error:', error);
+        console.error('Current working directory:', process.cwd());
+        console.error('Template path:', path.join(process.cwd(), 'views', 'quotation-template.ejs'));
+
         res.status(500).json({
             error: 'Failed to generate preview',
-            details: error.message
+            details: error.message,
+            pathHelper: {
+                cwd: process.cwd(),
+                templateExists: fs.existsSync(path.join(process.cwd(), 'views', 'quotation-template.ejs')),
+                assetsDirExists: fs.existsSync(path.join(process.cwd(), 'public', 'assets'))
+            }
         });
     }
 };
