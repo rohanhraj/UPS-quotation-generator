@@ -185,79 +185,35 @@ async function generatePDF() {
     loading.classList.add('active');
 
     try {
-        // Get preview HTML from the API (same endpoint as Preview button uses)
-        const response = await fetch('/api/preview', {
+        const response = await fetch('/api/generate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
 
         if (!response.ok) {
-            throw new Error('Failed to generate preview');
+            const errorData = await response.json();
+            throw new Error(errorData.details || 'Failed to generate PDF');
         }
 
-        const html = await response.text();
+        // Handle PDF download
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = `ARVI_Quotation_${data.quoteNumber || 'Q001'}.pdf`;
+        document.body.appendChild(a);
+        a.click();
 
-        // Create hidden iframe for rendering
-        const iframe = document.createElement('iframe');
-        iframe.style.cssText = 'position: fixed; left: -9999px; top: 0; width: 794px; height: 1123px; border: none;';
-        document.body.appendChild(iframe);
-
-        iframe.contentDocument.open();
-        iframe.contentDocument.write(html);
-        iframe.contentDocument.close();
-
-        // Wait for iframe content to load
-        await new Promise(resolve => {
-            iframe.onload = resolve;
-            setTimeout(resolve, 2000); // Fallback timeout
-        });
-
-        // Wait extra for images
-        await new Promise(r => setTimeout(r, 1000));
-
-        // Capture with html2canvas
-        const { jsPDF } = window.jspdf;
-        const canvas = await html2canvas(iframe.contentDocument.body, {
-            scale: 2,
-            useCORS: true,
-            allowTaint: true,
-            backgroundColor: '#ffffff',
-            width: 794,
-            windowWidth: 794
-        });
-
-        // Create PDF
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const pageWidth = 210;
-        const pageHeight = 297;
-        const margin = 10;
-        const contentWidth = pageWidth - (margin * 2);
-        const imgHeight = (canvas.height * contentWidth) / canvas.width;
-
-        let y = margin;
-        let remaining = imgHeight;
-        const usableHeight = pageHeight - (margin * 2);
-
-        // Add pages
-        pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', margin, y, contentWidth, imgHeight);
-        remaining -= usableHeight;
-
-        while (remaining > 0) {
-            pdf.addPage();
-            y = margin - (imgHeight - remaining);
-            pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', margin, y, contentWidth, imgHeight);
-            remaining -= usableHeight;
-        }
-
-        pdf.save(`ARVI_Quotation_${data.quoteNumber || 'Q001'}.pdf`);
-        document.body.removeChild(iframe);
+        // Cleanup
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
 
     } catch (error) {
         console.error('PDF generation error:', error);
-        alert('Error generating PDF. Please try again.');
+        alert(`Error generating PDF: ${error.message}`);
     } finally {
         loading.classList.remove('active');
     }
 }
-

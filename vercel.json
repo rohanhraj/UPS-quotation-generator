@@ -6,6 +6,11 @@
             "maxDuration": 30,
             "includeFiles": "{views/**,public/assets/**}"
         },
+        "api/generate.js": {
+            "memory": 1024,
+            "maxDuration": 60,
+            "includeFiles": "{views/**,public/assets/**}"
+        },
         "api/health.js": {
             "memory": 128,
             "maxDuration": 10
