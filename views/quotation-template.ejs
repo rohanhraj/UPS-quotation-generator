@@ -175,11 +175,6 @@
             font-weight: 700;
         }
 
-        .signature {
-            margin-top: 10mm;
-            font-size: 10pt;
-        }
-
         @media print {
             .container { padding: 0; }
             .blue-header { -webkit-print-color-adjust: exact; background-color: #1e40af !important; }
@@ -204,13 +199,18 @@
             
             <div style="margin-top: 2mm;" class="rich-text">
                 <span style="font-weight: bold;">To:</span><br>
-                <%- data.customerName %><br>
+                <%- data.customerName %>
                 <%- data.customerAddress %>
             </div>
 
             <div style="margin-top: 2mm;" class="rich-text">
                 <span style="font-weight: bold;">Kind Attn:</span><br>
                 <%- data.kindAttn %>
+            </div>
+
+            <div style="margin-top: 2mm;" class="rich-text">
+                <span style="font-weight: bold;">Ref:</span><br>
+                <%- data.customerRef %>
             </div>
             
             <div style="margin-top: 3mm;" class="rich-text">
@@ -233,7 +233,7 @@
             </div>
             <div class="text-content">
                 <p>At a time when self-reliance is driving India’s industrial backbone, Arvi stands out with a 75 – 80% locally designed and manufactured product line. This indigenous approach not only ensures robust quality but also strengthens India’s vision of <strong>“ Make in India.”</strong></p>
-                <p>Many so called manufacturers import UPS as semi knocked down kits and reassemble it in India under Make in India initiative; but the UPS design and its sub assembly are not Indian.</p>
+                <p>Many so called manufacturers import UPS as semi knocked down kits and reassemble it in India under Make in India initiative.</p>
                 <p><em>"Every Arvi UPS is carefully engineered and subjected to 12 rigorous stages of quality inspection and heatrun; ensures minimum 10years of product life."</em></p>
             </div>
         </div>
@@ -241,7 +241,8 @@
         <div class="blue-header">Quotation Details</div>
 
         <div class="section-title">Option I - <span class="rich-text"><%- data.optionTitle %></span></div>
-        <div style="margin-bottom: 3mm;" class="rich-text"><%- data.optionDetails %></div>
+        <div style="font-size: 10pt;" class="rich-text"><%- data.optionSubtitle %></div>
+        <div style="margin-top: 2mm; margin-bottom: 3mm;" class="rich-text"><%- data.optionDetails %></div>
 
         <table>
             <thead>
@@ -272,10 +273,26 @@
             <div class="total-row grand-total"><span>Grand Total:</span> <span>₹ <%= data.grandTotal.toLocaleString('en-IN') %></span></div>
         </div>
 
-        <div class="signature rich-text">
-            <p>warm regards,</p>
-            <%- data.signName %>
-            <%- data.signDesig %>
+        <div class="blue-header">Terms & Conditions</div>
+        <table style="margin-top: 0;">
+            <tr><td style="width: 30mm; font-weight: bold;">Price</td><td class="rich-text"><%- data.priceLocation %></td></tr>
+            <tr><td style="font-weight: bold;">GST</td><td class="rich-text"><%- data.gstTerms %></td></tr>
+            <tr><td style="font-weight: bold;">Delivery</td><td class="rich-text"><%- data.delivery %></td></tr>
+            <tr><td style="font-weight: bold;">Payment</td><td class="rich-text"><%- data.payment %></td></tr>
+            <tr><td style="font-weight: bold;">FAT</td><td class="rich-text"><%- data.fat %></td></tr>
+            <tr><td style="font-weight: bold;">Warranty</td><td class="rich-text"><%- data.warranty %></td></tr>
+            <tr><td style="font-weight: bold;">Validity</td><td class="rich-text"><%- data.validity %></td></tr>
+            <tr><td style="font-weight: bold;">Updates</td><td class="rich-text"><%- data.updates %></td></tr>
+        </table>
+
+        <div style="margin-top: 5mm;" class="rich-text">
+            <p>Please visit us at www.arviups.com</p>
+            <p>Thanking you and assuring you of our best services.</p>
+            <p style="margin-top: 5mm;">warm regards,</p>
+            <div style="margin-top: 2mm;">
+                <%- data.signName %>
+                <%- data.signDesig %>
+            </div>
             <p>For Arvi Systems & Controls Pvt Ltd</p>
         </div>
 

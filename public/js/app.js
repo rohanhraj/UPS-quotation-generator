@@ -2,9 +2,10 @@
 let quillInstances = {};
 
 const toolbarOptions = [
-    ['bold', 'italic', 'underline'],
-    [{ 'color': [] }],
+    ['bold', 'italic', 'underline', 'strike'],
+    [{ 'color': [] }, { 'background': [] }],
     [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+    [{ 'align': [] }],
     ['clean']
 ];
 
@@ -12,16 +13,14 @@ document.addEventListener('DOMContentLoaded', function () {
     initializeStaticEditors();
     initializeForm();
     setupEventListeners();
-    addItem(); // Start with one row
+    addItem(); // Initial item
 });
 
 function createEditor(selector, placeholder = '') {
     const quill = new Quill(selector, {
         theme: 'snow',
         placeholder: placeholder,
-        modules: {
-            toolbar: toolbarOptions
-        }
+        modules: { toolbar: toolbarOptions }
     });
     quillInstances[selector] = quill;
     return quill;
@@ -31,16 +30,37 @@ function initializeStaticEditors() {
     createEditor('#customerNameEditor', 'Customer Name...');
     createEditor('#customerAddressEditor', 'Address...');
     createEditor('#kindAttnEditor', 'Kind Attention...');
-    createEditor('#referenceTextEditor', 'Main reference details...');
+    createEditor('#customerRefEditor', 'Customer Reference...');
+    createEditor('#referenceTextEditor', 'Main Reference Details...');
     createEditor('#optionTitleEditor', 'Option Title...');
-    createEditor('#optionDetailsEditor', 'Technical details...');
-    createEditor('#signNameEditor', 'Signatory name...');
+    createEditor('#optionSubtitleEditor', 'Option Subtitle...');
+    createEditor('#optionDetailsEditor', 'Technical Details...');
+    createEditor('#priceLocationEditor', 'Price Terms...');
+    createEditor('#gstTermsEditor', 'GST Terms...');
+    createEditor('#deliveryEditor', 'Delivery Terms...');
+    createEditor('#paymentEditor', 'Payment Terms...');
+    createEditor('#fatEditor', 'FAT Terms...');
+    createEditor('#warrantyEditor', 'Warranty Terms...');
+    createEditor('#validityEditor', 'Validity Terms...');
+    createEditor('#updatesEditor', 'Update Terms...');
+    createEditor('#signNameEditor', 'Signatory Name...');
     createEditor('#signDesigEditor', 'Designation...');
 
-    // Set initial values
+    // Set Defaults
     quillInstances['#referenceTextEditor'].clipboard.dangerouslyPasteHTML('<p>Dear Sir/Madam,</p><p><br></p><p>With reference to your enquiry, we are pleased to submit our quotation:</p>');
     quillInstances['#optionTitleEditor'].clipboard.dangerouslyPasteHTML('<p><strong>PFC-XR 303</strong></p>');
+    quillInstances['#optionSubtitleEditor'].clipboard.dangerouslyPasteHTML('<p>Online UPS - specially designed for laser cutting machines.</p>');
+    quillInstances['#optionDetailsEditor'].clipboard.dangerouslyPasteHTML('<p>VFI power-conditioning topology with galvanic isolation for comprehensive power protection.</p>');
+    quillInstances['#priceLocationEditor'].clipboard.dangerouslyPasteHTML('<p>For Bangalore.</p>');
+    quillInstances['#gstTermsEditor'].clipboard.dangerouslyPasteHTML('<p>18% extra on UPS, batteries and battery stand.</p>');
+    quillInstances['#deliveryEditor'].clipboard.dangerouslyPasteHTML('<p>Ex-works, within 2-3 weeks from receipt of confirmed order.</p>');
+    quillInstances['#paymentEditor'].clipboard.dangerouslyPasteHTML('<p>50% advance along with order, balance before dispatch.</p>');
+    quillInstances['#fatEditor'].clipboard.dangerouslyPasteHTML('<p>Factory Acceptance Test (FAT) - We can arrange for a in-person / video online factory acceptance test of the UPS before despatch.</p>');
+    quillInstances['#warrantyEditor'].clipboard.dangerouslyPasteHTML('<p>2 years comprehensive warranty on UPS from date of installation.</p>');
+    quillInstances['#validityEditor'].clipboard.dangerouslyPasteHTML('<p>30 days</p>');
+    quillInstances['#updatesEditor'].clipboard.dangerouslyPasteHTML('<p>You will be updated regularly about the status of progress in production.</p>');
     quillInstances['#signNameEditor'].clipboard.dangerouslyPasteHTML('<p><strong>Santosh Risbood</strong></p>');
+    quillInstances['#signDesigEditor'].clipboard.dangerouslyPasteHTML('<p>General Manager - OEM Business</p>');
 }
 
 function initializeForm() {
@@ -49,6 +69,30 @@ function initializeForm() {
     const year = today.getFullYear();
     const randomNum = String(Math.floor(Math.random() * 999) + 1).padStart(3, '0');
     document.getElementById('quoteNumber').value = `ARVI/${year}/${randomNum}`;
+}
+
+let itemCounter = 0;
+function addItem() {
+    const tbody = document.getElementById('itemsTableBody');
+    const row = document.createElement('tr');
+    const descId = `item-desc-${itemCounter}`;
+    
+    row.innerHTML = `
+        <td><input type="text" class="slno-input" value="${itemCounter + 1}" style="width: 40px;"></td>
+        <td><div id="${descId}" style="height: 80px; background: white;"></div></td>
+        <td><input type="number" class="price-input" value="0"></td>
+        <td><input type="number" class="qty-input" value="1"></td>
+        <td><input type="text" class="value-input" readonly value="0.00"></td>
+        <td><button type="button" class="btn-remove" onclick="this.closest('tr').remove(); calculateTotal();">✕</button></td>
+    `;
+    tbody.appendChild(row);
+    
+    const quill = new Quill(`#${descId}`, {
+        theme: 'snow',
+        modules: { toolbar: [['bold', 'italic', { 'color': [] }, 'clean']] }
+    });
+    quillInstances[`#${descId}`] = quill;
+    itemCounter++;
 }
 
 function setupEventListeners() {
@@ -61,32 +105,6 @@ function setupEventListeners() {
             calculateTotal();
         }
     });
-}
-
-let itemCounter = 0;
-function addItem() {
-    const tbody = document.getElementById('itemsTableBody');
-    const row = document.createElement('tr');
-    const descId = `item-desc-${itemCounter}`;
-    
-    row.innerHTML = `
-        <td><input type="text" class="slno-input" value="${itemCounter + 1}" style="width: 40px;"></td>
-        <td><div id="${descId}" style="height: 60px; background: white;"></div></td>
-        <td><input type="number" class="price-input" value="0"></td>
-        <td><input type="number" class="qty-input" value="1"></td>
-        <td><input type="text" class="value-input" readonly value="0.00"></td>
-        <td><button type="button" class="btn-remove" onclick="this.closest('tr').remove(); calculateTotal();">✕</button></td>
-    `;
-    
-    tbody.appendChild(row);
-    
-    const quill = new Quill(`#${descId}`, {
-        theme: 'snow',
-        modules: { toolbar: [['bold', 'italic', { 'color': [] }, 'clean']] }
-    });
-    quillInstances[`#${descId}`] = quill;
-    
-    itemCounter++;
 }
 
 function calculateTotal() {
@@ -111,19 +129,29 @@ function calculateTotal() {
     document.getElementById('grandTotal').value = grand;
 }
 
-function syncRichText() {
+function syncAllRichText() {
     document.getElementById('customerName').value = quillInstances['#customerNameEditor'].root.innerHTML;
     document.getElementById('customerAddress').value = quillInstances['#customerAddressEditor'].root.innerHTML;
     document.getElementById('kindAttn').value = quillInstances['#kindAttnEditor'].root.innerHTML;
+    document.getElementById('customerRef').value = quillInstances['#customerRefEditor'].root.innerHTML;
     document.getElementById('referenceText').value = quillInstances['#referenceTextEditor'].root.innerHTML;
     document.getElementById('optionTitle').value = quillInstances['#optionTitleEditor'].root.innerHTML;
+    document.getElementById('optionSubtitle').value = quillInstances['#optionSubtitleEditor'].root.innerHTML;
     document.getElementById('optionDetails').value = quillInstances['#optionDetailsEditor'].root.innerHTML;
+    document.getElementById('priceLocation').value = quillInstances['#priceLocationEditor'].root.innerHTML;
+    document.getElementById('gstTerms').value = quillInstances['#gstTermsEditor'].root.innerHTML;
+    document.getElementById('delivery').value = quillInstances['#deliveryEditor'].root.innerHTML;
+    document.getElementById('payment').value = quillInstances['#paymentEditor'].root.innerHTML;
+    document.getElementById('fat').value = quillInstances['#fatEditor'].root.innerHTML;
+    document.getElementById('warranty').value = quillInstances['#warrantyEditor'].root.innerHTML;
+    document.getElementById('validity').value = quillInstances['#validityEditor'].root.innerHTML;
+    document.getElementById('updates').value = quillInstances['#updatesEditor'].root.innerHTML;
     document.getElementById('signName').value = quillInstances['#signNameEditor'].root.innerHTML;
     document.getElementById('signDesig').value = quillInstances['#signDesigEditor'].root.innerHTML;
 }
 
 function getFormData() {
-    syncRichText();
+    syncAllRichText();
     const form = document.getElementById('quotationForm');
     const formData = new FormData(form);
     const data = {};

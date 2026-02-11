@@ -12,6 +12,18 @@
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        .rich-text-container {
+            margin-bottom: 10px;
+        }
+        .rich-text-editor {
+            background: white;
+        }
+        /* Style for item description editors to look consistent in the table */
+        .item-description-editor {
+            height: 100px;
+        }
+    </style>
 </head>
 
 <body>
@@ -45,7 +57,7 @@
                         <h2><span class="section-icon">📋</span> Quotation Reference</h2>
                     </div>
                     <p class="section-desc">This text will appear below the header on Page 1 of the quotation</p>
-                    <div class="form-grid cols-2">
+                    <div class="form-grid cols-3">
                         <div class="form-group">
                             <label for="quoteNumber">Quotation No.</label>
                             <input type="text" id="quoteNumber" name="quoteNumber" placeholder="ARVI/2026/001" required>
@@ -54,7 +66,13 @@
                             <label for="quoteDate">Date</label>
                             <input type="date" id="quoteDate" name="quoteDate" required>
                         </div>
+                        <div class="form-group">
+                            <label for="customerRef">Customer Ref (Rich Text)</label>
+                            <div id="customerRefEditor" class="rich-text-editor" style="height: 60px;"></div>
+                            <input type="hidden" id="customerRef" name="customerRef">
+                        </div>
                     </div>
+                    
                     <div class="form-grid cols-2">
                         <div class="form-group">
                             <label for="customerName">Customer / Company Name (Rich Text)</label>
@@ -67,11 +85,13 @@
                             <input type="hidden" id="customerAddress" name="customerAddress">
                         </div>
                     </div>
+
                     <div class="form-group full-width">
                         <label for="kindAttn">Kind Attention (Rich Text)</label>
-                        <div id="kindAttnEditor" class="rich-text-editor" style="height: 80px;"></div>
+                        <div id="kindAttnEditor" class="rich-text-editor" style="height: 60px;"></div>
                         <input type="hidden" id="kindAttn" name="kindAttn">
                     </div>
+
                     <div class="form-group full-width">
                         <label for="referenceText">Reference Details (Rich Text)</label>
                         <div id="referenceTextEditor" class="rich-text-editor" style="height: 150px;"></div>
@@ -86,10 +106,17 @@
                         <button type="button" class="btn btn-small btn-add" id="addItemBtn">+ Add Row</button>
                     </div>
 
-                    <div class="form-group full-width">
-                        <label for="optionTitle">Option Title (Rich Text)</label>
-                        <div id="optionTitleEditor" class="rich-text-editor" style="height: 80px;"></div>
-                        <input type="hidden" id="optionTitle" name="optionTitle">
+                    <div class="form-grid cols-2">
+                        <div class="form-group">
+                            <label for="optionTitle">Option Title (Rich Text)</label>
+                            <div id="optionTitleEditor" class="rich-text-editor" style="height: 60px;"></div>
+                            <input type="hidden" id="optionTitle" name="optionTitle">
+                        </div>
+                        <div class="form-group">
+                            <label for="optionSubtitle">Subtitle (Rich Text)</label>
+                            <div id="optionSubtitleEditor" class="rich-text-editor" style="height: 60px;"></div>
+                            <input type="hidden" id="optionSubtitle" name="optionSubtitle">
+                        </div>
                     </div>
 
                     <div class="form-group full-width">
@@ -103,7 +130,7 @@
                             <thead>
                                 <tr>
                                     <th style="width: 60px;">Sl No</th>
-                                    <th>Description</th>
+                                    <th>Description (Rich Text)</th>
                                     <th style="width: 100px;">Unit Price</th>
                                     <th style="width: 70px;">Qty</th>
                                     <th style="width: 100px;">Value</th>
@@ -111,7 +138,7 @@
                                 </tr>
                             </thead>
                             <tbody id="itemsTableBody">
-                                <!-- Row template used in app.js -->
+                                <!-- Dynamic rows -->
                             </tbody>
                         </table>
                     </div>
@@ -136,6 +163,57 @@
                     </div>
                 </section>
 
+                <!-- Terms & Conditions -->
+                <section class="form-section">
+                    <div class="section-header">
+                        <h2><span class="section-icon">📝</span> Terms & Conditions</h2>
+                    </div>
+                    <div class="form-grid cols-2">
+                        <div class="form-group">
+                            <label>Price (Rich Text)</label>
+                            <div id="priceLocationEditor" class="rich-text-editor" style="height: 60px;"></div>
+                            <input type="hidden" name="priceLocation" id="priceLocation">
+                        </div>
+                        <div class="form-group">
+                            <label>GST (Rich Text)</label>
+                            <div id="gstTermsEditor" class="rich-text-editor" style="height: 60px;"></div>
+                            <input type="hidden" name="gstTerms" id="gstTerms">
+                        </div>
+                        <div class="form-group">
+                            <label>Delivery (Rich Text)</label>
+                            <div id="deliveryEditor" class="rich-text-editor" style="height: 60px;"></div>
+                            <input type="hidden" name="delivery" id="delivery">
+                        </div>
+                        <div class="form-group">
+                            <label>Payment (Rich Text)</label>
+                            <div id="paymentEditor" class="rich-text-editor" style="height: 60px;"></div>
+                            <input type="hidden" name="payment" id="payment">
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>FAT (Rich Text)</label>
+                        <div id="fatEditor" class="rich-text-editor" style="height: 80px;"></div>
+                        <input type="hidden" name="fat" id="fat">
+                    </div>
+                    <div class="form-grid cols-2">
+                        <div class="form-group">
+                            <label>Warranty (Rich Text)</label>
+                            <div id="warrantyEditor" class="rich-text-editor" style="height: 60px;"></div>
+                            <input type="hidden" name="warranty" id="warranty">
+                        </div>
+                        <div class="form-group">
+                            <label>Validity (Rich Text)</label>
+                            <div id="validityEditor" class="rich-text-editor" style="height: 60px;"></div>
+                            <input type="hidden" name="validity" id="validity">
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Updates (Rich Text)</label>
+                        <div id="updatesEditor" class="rich-text-editor" style="height: 80px;"></div>
+                        <input type="hidden" name="updates" id="updates">
+                    </div>
+                </section>
+
                 <!-- Signatory -->
                 <section class="form-section">
                     <div class="section-header">
@@ -144,12 +222,12 @@
                     <div class="form-grid cols-2">
                         <div class="form-group">
                             <label for="signName">Name (Rich Text)</label>
-                            <div id="signNameEditor" class="rich-text-editor" style="height: 80px;"></div>
+                            <div id="signNameEditor" class="rich-text-editor" style="height: 60px;"></div>
                             <input type="hidden" id="signName" name="signName">
                         </div>
                         <div class="form-group">
                             <label for="signDesig">Designation (Rich Text)</label>
-                            <div id="signDesigEditor" class="rich-text-editor" style="height: 80px;"></div>
+                            <div id="signDesigEditor" class="rich-text-editor" style="height: 60px;"></div>
                             <input type="hidden" id="signDesig" name="signDesig">
                         </div>
                     </div>
