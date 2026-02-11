@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>ARVI Power - Quotation</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
         * {
             margin: 0;
@@ -19,564 +19,243 @@
         }
 
         body {
-            font-family: 'Open Sans', Arial, sans-serif;
-            font-size: 11px;
-            line-height: 1.4;
+            font-family: 'Roboto', Arial, sans-serif;
+            font-size: 10pt;
+            line-height: 1.3;
             color: #333;
             background: white;
-            display: flex;
-            flex-direction: column;
         }
 
         .container {
             max-width: 210mm;
             width: 100%;
             margin: 0 auto;
-            padding: 10mm;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .footer-pusher {
-            flex: 1;
-        }
-
-        /* Enforce uniform font sizes */
-        p,
-        li,
-        .data-table,
-        .quote-table,
-        .terms-table,
-        .tech-box {
-            font-size: 11px !important;
-        }
-
-        .blue-header,
-        .section-title,
-        .option-header,
-        .company-footer h4,
-        .option-title .model {
-            font-size: 12px !important;
+            padding: 15mm 15mm 25mm 15mm;
+            position: relative;
+            min-height: 100vh;
         }
 
         /* Header */
         .header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding-bottom: 6px;
-            border-bottom: 1px solid #ddd;
-            margin-bottom: 8px;
+            align-items: flex-start;
+            padding-bottom: 5mm;
+            margin-bottom: 5mm;
         }
 
         .header-left {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 4mm;
         }
 
-        .year-badge {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #c9a961 0%, #b8956a 100%);
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-
-        .year-badge .num {
-            font-size: 16px;
-            font-weight: 700;
-            line-height: 1;
-        }
-
-        .year-badge .text {
-            font-size: 4px;
-            text-align: center;
+        .badge-img {
+            height: 45px;
         }
 
         .header-info {
-            font-size: 9px;
-            color: #666;
-            max-width: 250px;
-        }
-
-        .header-info .iso {
-            font-weight: 600;
-            font-size: 8px;
+            font-size: 8pt;
+            color: #444;
+            max-width: 300px;
+            font-weight: 500;
         }
 
         .logo-img {
-            height: 35px;
+            height: 40px;
         }
 
         /* Blue Headers */
         .blue-header {
-            background: #5a6a7a;
+            background: #1e40af;
             color: white;
             text-align: center;
-            padding: 4px 8px;
-            font-weight: 600;
-            font-size: 12px;
-            margin: 8px 0 6px;
+            padding: 2mm;
+            font-weight: 700;
+            font-size: 11pt;
+            margin: 4mm 0 3mm;
+            text-transform: uppercase;
         }
 
         /* Red Accent */
         .red {
-            color: #c41e3a;
+            color: #dc2626;
         }
 
         .red-bold {
-            color: #c41e3a;
+            color: #dc2626;
             font-weight: 700;
         }
 
         /* Reference Box */
         .ref-box {
-            background: #f8f8f8;
-            border: 1px solid #e0e0e0;
-            padding: 6px 10px;
-            margin: 6px 0;
+            margin: 4mm 0;
+            font-size: 10pt;
         }
 
         .ref-box p {
-            margin: 2px 0;
-            font-size: 11px;
+            margin: 1mm 0;
+        }
+
+        .ref-details {
+            margin-top: 3mm;
+            text-align: justify;
         }
 
         /* Section Title */
         .section-title {
-            font-size: 12px;
-            font-weight: 600;
-            margin: 8px 0 5px;
+            font-size: 11pt;
+            font-weight: 700;
+            margin: 4mm 0 2mm;
+            color: #1e40af;
         }
 
-        /* Content Row */
-        .content-row {
+        /* Content Layout */
+        .content-block {
             display: flex;
-            gap: 10px;
-            margin: 4px 0;
-            align-items: flex-start;
+            gap: 5mm;
+            margin: 3mm 0;
         }
 
-        .img-col {
-            flex: 0 0 110px;
+        .img-stack {
+            flex: 0 0 45mm;
+            display: flex;
+            flex-direction: column;
+            gap: 2mm;
         }
 
-        .img-col img {
+        .img-stack img {
             width: 100%;
-            height: auto;
-            border: 1px solid #ddd;
-            margin-bottom: 4px;
+            border: 0.5pt solid #ccc;
         }
 
-        .img-col img:last-child {
-            margin-bottom: 0;
-        }
-
-        .text-col {
+        .text-content {
             flex: 1;
             text-align: justify;
-            line-height: 1.4;
         }
 
-        .text-col p {
-            margin-bottom: 3px;
-        }
-
-        .text-col p:first-child {
-            margin-top: 0;
+        .text-content p {
+            margin-bottom: 2mm;
         }
 
         /* Bullet List */
         ul.bullets {
-            padding-left: 12px;
-            margin: 2px 0;
-            list-style-type: none;
+            list-style: none;
+            padding-left: 2mm;
+            margin: 2mm 0;
         }
 
         ul.bullets li {
-            margin-bottom: 1px;
+            margin-bottom: 1mm;
             position: relative;
-            padding-left: 15px;
+            padding-left: 5mm;
         }
 
         ul.bullets li::before {
-            content: "";
+            content: "•";
             position: absolute;
             left: 0;
-            color: #c41e3a;
-            font-weight: bold;
-        }
-
-        /* Image Row */
-        .img-row {
-            display: flex;
-            gap: 6px;
-            margin: 6px 0;
-        }
-
-        .img-row img {
-            flex: 1;
-            height: 70px;
-            object-fit: cover;
-            border: 1px solid #ddd;
-        }
-
-        /* Stats Row */
-        .stats-row {
-            display: flex;
-            justify-content: center;
-            gap: 50px;
-            margin: 10px 0;
-            text-align: center;
-        }
-
-        .stat .number {
-            font-size: 20px;
-            font-weight: 700;
-            color: #c41e3a;
-        }
-
-        .stat .label {
-            font-size: 8px;
-            color: #666;
+            color: #dc2626;
+            font-weight: 900;
         }
 
         /* Tables */
-        .data-table {
+        table {
             width: 100%;
             border-collapse: collapse;
-            margin: 6px 0;
+            margin: 4mm 0;
         }
 
-        .data-table th,
-        .data-table td {
-            border: 1px solid #999;
-            padding: 3px 6px;
+        th, td {
+            border: 0.5pt solid #666;
+            padding: 1.5mm 2mm;
+            font-size: 9.5pt;
+        }
+
+        th {
+            background: #f1f5f9;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .blue-th th {
+            background: #1e40af;
+            color: white;
             text-align: left;
         }
 
-        .data-table th {
-            background: #5a6a7a;
-            color: white;
-            font-weight: 600;
-            font-size: 9px;
-        }
-
-        .data-table td:first-child {
-            font-weight: 500;
-            width: 35%;
-        }
-
-        /* Quote Table */
-        .quote-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 6px 0;
-        }
-
-        .quote-table th,
-        .quote-table td {
-            border: 1px solid #999;
-            padding: 4px 6px;
-        }
-
-        .quote-table th {
-            background: #e8e8e8;
-            font-weight: 600;
-            text-align: center;
-        }
-
-        .quote-table td {
-            vertical-align: top;
-        }
-
-        .quote-table td:first-child {
-            text-align: center;
-            width: 35px;
-        }
-
-        .quote-table td:nth-child(3),
-        .quote-table td:nth-child(4),
-        .quote-table td:nth-child(5) {
-            text-align: center;
-        }
-
-        /* Option Header */
-        .option-header {
-            background: #5a6a7a;
-            color: white;
-            text-align: center;
-            padding: 4px;
-            font-weight: 600;
-            font-size: 12px;
-            margin: 10px 0 5px;
-        }
-
-        .option-title {
-            text-align: center;
-            margin: 4px 0;
-        }
-
-        .option-title .model {
-            color: #c41e3a;
-            font-weight: 700;
-            font-size: 12px;
-        }
-
-        .option-title .desc {
-            font-size: 11px;
-        }
-
-        /* Terms Table */
-        .terms-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 6px 0;
-        }
-
-        .terms-table th {
-            background: #5a6a7a;
-            color: white;
-            padding: 4px;
-            font-weight: 600;
-        }
-
-        .terms-table td {
-            border: 1px solid #999;
-            padding: 3px 6px;
-            vertical-align: top;
-        }
-
-        .terms-table td:first-child {
-            width: 60px;
-            font-weight: 600;
-            background: #f5f5f5;
-        }
-
         /* Footer */
-        .footer {
-            margin-top: 15px;
+        .page-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 0 15mm 5mm 15mm;
         }
 
-        .company-footer {
-            background: #d3e4f0;
-            padding: 6px 10px;
+        .footer-address {
+            background: #dbeafe;
+            padding: 2mm;
             text-align: center;
+            font-size: 8pt;
+            color: #1e3a8a;
+            border-radius: 1mm;
+            margin-bottom: 2mm;
         }
 
-        .company-footer h4 {
-            color: #2c5282;
-            font-size: 12px;
-            margin-bottom: 2px;
-        }
-
-        .company-footer p {
-            font-size: 9px;
-            color: #333;
-        }
-
-        .cert-footer {
-            background: #f8f8f8;
-            padding: 4px 10px;
+        .footer-cert {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 8px;
-            border-top: 1px solid #ddd;
+            gap: 5mm;
+            font-size: 8pt;
+            font-weight: 500;
         }
 
-        .cert-footer img {
-            height: 22px;
+        .footer-cert img {
+            height: 25px;
         }
 
-        .cert-footer span {
-            font-size: 8px;
-        }
-
-        /* Quote Box */
-        .quote-box {
-            background: #f5f5f5;
-            border-left: 3px solid #5a6a7a;
-            padding: 6px 10px;
-            margin: 6px 0;
-            font-size: 8px;
-        }
-
-        .quote-box p {
-            margin-bottom: 4px;
-        }
-
-        /* Principles Box */
-        .principles-box {
+        /* Totals */
+        .total-box {
+            margin-top: 4mm;
             display: flex;
-            gap: 10px;
-            margin: 6px 0;
-            align-items: flex-start;
-        }
-
-        .shield-icon {
-            flex: 0 0 40px;
-            text-align: center;
-        }
-
-        .shield-placeholder {
-            width: 35px;
-            height: 35px;
-            background: #5a6a7a;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 16px;
-        }
-
-        /* Motto Box */
-        .motto-box {
-            display: flex;
-            gap: 10px;
-            margin: 6px 0;
-        }
-
-        .motto-label {
-            flex: 0 0 50px;
-            background: #5a6a7a;
-            color: white;
-            padding: 6px;
-            text-align: center;
-            font-weight: 600;
-            font-size: 10px;
-        }
-
-        /* Technical Details Box */
-        .tech-box {
-            background: #f9f9f9;
-            padding: 6px 10px;
-            margin: 6px 0;
-        }
-
-        .tech-box p {
-            margin-bottom: 4px;
-        }
-
-        /* Signature Section */
-        .signature-section {
-            margin: 12px 0;
-            font-size: 9px;
-        }
-
-        .signature-section p {
-            margin-bottom: 4px;
-        }
-
-        /* Horizontal Line */
-        hr.section-divider {
-            border: none;
-            border-top: 2px solid #5a6a7a;
-            margin: 10px 0;
-        }
-
-        /* Page Break Control */
-        .page-break {
-            page-break-before: always;
-        }
-
-        .avoid-break {
-            page-break-inside: avoid;
-        }
-
-        /* Total Section */
-        .total-section {
-            margin: 10px 0;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 6px;
-            padding: 8px 12px;
-            border: 1px solid #ddd;
+            flex-direction: column;
+            align-items: flex-end;
         }
 
         .total-row {
             display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            padding: 4px 0;
-            border-bottom: 1px solid #e0e0e0;
+            width: 60mm;
+            justify-content: space-between;
+            padding: 1mm 0;
+            border-bottom: 0.5pt solid #eee;
         }
 
-        .total-row:last-child {
-            border-bottom: none;
-        }
-
-        .total-label {
-            font-size: 9px;
-            font-weight: 500;
-            color: #666;
-            min-width: 80px;
-            text-align: right;
-            margin-right: 12px;
-        }
-
-        .total-value {
-            font-size: 10px;
-            font-weight: 600;
-            color: #333;
-            min-width: 100px;
-            text-align: right;
-        }
-
-        .total-row.grand-total {
-            background: #c41e3a;
-            margin: 6px -12px -8px;
-            padding: 8px 12px;
-            border-radius: 0 0 6px 6px;
-        }
-
-        .total-row.grand-total .total-label {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 10px;
-            font-weight: 600;
-        }
-
-        .total-row.grand-total .total-value {
+        .grand-total {
+            background: #dc2626;
             color: white;
-            font-size: 12px;
+            padding: 2mm;
+            border-radius: 1mm;
+            margin-top: 1mm;
             font-weight: 700;
         }
 
+        /* Signature */
+        .signature {
+            margin-top: 10mm;
+            font-size: 10pt;
+        }
+
+        .page-break {
+            page-break-before: always;
+        }
+
         @media print {
-            body {
-                background: white;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-
-            html,
-            body {
-                height: 100%;
-            }
-
-            .container {
-                width: 100%;
-                max-width: none;
-                padding: 0;
-                min-height: 100%;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .footer-pusher {
-                flex: 1;
-            }
-
-            @page {
-                size: A4;
-                margin: 10mm;
-            }
+            .container { padding: 0; }
+            .blue-header { -webkit-print-color-adjust: exact; background-color: #1e40af !important; }
+            .grand-total { -webkit-print-color-adjust: exact; background-color: #dc2626 !important; }
+            .footer-address { -webkit-print-color-adjust: exact; background-color: #dbeafe !important; }
         }
     </style>
 </head>
@@ -586,340 +265,115 @@
         <!-- HEADER -->
         <div class="header">
             <div class="header-left">
-                <div class="year-badge">
-                    <span class="num">27</span>
-                    <span class="text">Years of<br>Excellence</span>
-                </div>
+                <% if (assetImages && assetImages['img_badge.png']) { %>
+                    <img src="<%= assetImages['img_badge.png'] %>" class="badge-img">
+                <% } %>
                 <div class="header-info">
-                    <div class="iso">ISO 9001:2015</div>
-                    <div>Rated as the BEST In-House R&D among Indian UPS manufacturers by SD.</div>
+                    ISO 9001:2015<br>
+                    Rated as the BEST In-House R&D among Indian UPS manufacturers by SD.
                 </div>
             </div>
-            <% if (typeof isBase64 !=='undefined' && isBase64 && assetImages && assetImages['IMG-20260205-WA0005.jpg'])
-                { %>
-                <img src="<%= assetImages['IMG-20260205-WA0005.jpg'] %>" alt="ARVI Power" class="logo-img">
-                <% } else { %>
-                    <img src="<%= assetsPath %>/IMG-20260205-WA0005.jpg" alt="ARVI Power" class="logo-img">
-                    <% } %>
-        </div>
-
-        <!-- REFERENCE BOX -->
-        <div class="ref-box">
-            <p><strong>Quotation No:</strong> <%= data.quoteNumber || '' %> &nbsp;&nbsp; <strong>Date:</strong> <%= data.quoteDate || new Date().toISOString().split('T')[0] %></p>
-            <p><strong>To:</strong> <%= data.customerName || '' %><% if (data.customerAddress) { %>, <%= data.customerAddress %><% } %></p>
-            <% if (data.kindAttn) { %><p><strong>Kind Attn:</strong> <%= data.kindAttn %></p><% } %>
-            <% if (data.referenceText) { %>
-                <div style="margin-top: 8px; font-size: 11px;"><%- data.referenceText %></div>
+            <% if (assetImages && assetImages['img_logo.png']) { %>
+                <img src="<%= assetImages['img_logo.png'] %>" class="logo-img">
             <% } %>
         </div>
 
-        <!-- SECTION 1: What sets ARVI apart -->
+        <!-- REFERENCE -->
+        <div class="ref-box">
+            <p><strong>Quotation No:</strong> <%= data.quoteNumber %></p>
+            <p><strong>Date:</strong> <%= data.quoteDate %></p>
+            <p><strong>To:</strong> <%= data.customerName %></p>
+            <p><%= data.customerAddress %></p>
+            <p><strong>Kind Attn:</strong> <%= data.kindAttn %></p>
+            
+            <div class="ref-details">
+                <%- data.referenceText %>
+            </div>
+        </div>
+
         <div class="blue-header">What sets Arvi apart from the rest? Let's take a closer look.</div>
 
         <div class="section-title">1. Truly Indian with <span class="red-bold">75 - 80% local content/ Indian components</span></div>
 
-        <div class="content-row avoid-break">
-            <div class="img-col">
-                <% if (typeof isBase64 !=='undefined' && isBase64 && assetImages &&
-                    assetImages['IMG-20260205-WA0004.jpg']) { %>
-                    <img src="<%= assetImages['IMG-20260205-WA0004.jpg'] %>" alt="UPS Internal">
-                    <% } else { %>
-                        <img src="<%= assetsPath %>/IMG-20260205-WA0004.jpg" alt="UPS Internal">
-                        <% } %>
-                            <% if (typeof isBase64 !=='undefined' && isBase64 && assetImages &&
-                                assetImages['IMG-20260205-WA0010.jpg']) { %>
-                                <img src="<%= assetImages['IMG-20260205-WA0010.jpg'] %>" alt="UPS Cabinet">
-                                <% } else { %>
-                                    <img src="<%= assetsPath %>/IMG-20260205-WA0010.jpg" alt="UPS Cabinet">
-                                    <% } %>
+        <div class="content-block">
+            <div class="img-stack">
+                <% if (assetImages['IMG-20260205-WA0004.jpg']) { %>
+                    <img src="<%= assetImages['IMG-20260205-WA0004.jpg'] %>">
+                <% } %>
+                <% if (assetImages['IMG-20260205-WA0010.jpg']) { %>
+                    <img src="<%= assetImages['IMG-20260205-WA0010.jpg'] %>">
+                <% } %>
             </div>
-            <div class="text-col">
-                <p>At a time when self-reliance is driving India’s industrial backbone, Arvi stands out with a 
-                    <strong>75 – 80% locally designed and manufactured product line</strong>. This indigenous approach not only 
-                    ensures robust quality but also strengthens India’s vision of <strong>“ Make in India.”</strong>
-                </p>
-
-                <p>Many <strong>so called manufacturers import</strong> UPS as semi knocked down kits and reassemble it in 
-                    India under Make in India initiative; but the UPS design and its sub assembly are not Indian. They 
-                    are designed for general requirement and are mass produced and sold as "box selling" and hence the 
-                    life of these UPS are typically 5-6years in the harsh environment of India.</p>
-
-                <p>"Every Arvi UPS is carefully engineered and subjected to 12 rigorous stages of quality 
-                    inspection and heatrun; ensures minimum 10years of product life - justifies the return on 
-                    your high investment and also lesser cost per year."</p>
-
+            <div class="text-content">
+                <p>At a time when self-reliance is driving India’s industrial backbone, Arvi stands out with a 75 – 80% locally designed and manufactured product line. This indigenous approach not only ensures robust quality but also strengthens India’s vision of <strong>“ Make in India.”</strong></p>
+                <p>Many so called manufacturers import UPS as semi knocked down kits and reassemble it in India under Make in India initiative; but the UPS design and its sub assembly are not Indian. They are designed for general requirement and are mass produced and sold as "box selling" and hence the life of these UPS are typically 5-6years in the harsh environment of India.</p>
+                <p><em>"Every Arvi UPS is carefully engineered and subjected to 12 rigorous stages of quality inspection and heatrun; ensures minimum 10years of product life."</em></p>
                 <ul class="bullets">
                     <li>Indigenous design.</li>
                     <li>Easy to service single DSP card.</li>
                     <li>Rugged, long-life design.</li>
                     <li>Prompt & ex-stock delivery.</li>
-                    <li>Power Factor Corrected, Parallel redundancy, regenerative load handling.</li>
+                    <li>Power Factor Corrected, Parallel redundancy.</li>
                     <li>10years of unconditional spares support.</li>
-                    <li>SNMP, MODBUS communication interface.</li>
-                </ul>
-
-                <p style="font-size: 7px; color: #666;">Esthetically designed - export compliant. Exported to Dubai, Nigeria, Philippines, Malaysia and Nepal</p>
-            </div>
-        </div>
-
-        <!-- SECTION 2: Objective -->
-        <div class="blue-header">2. We are different in our objective and approach</div>
-
-        <p style="margin: 4px 0; font-size: 11px;"><strong style="border-bottom: 2px solid #c41e3a;">Quality of power matters</strong></p>
-
-        <p style="margin: 4px 0; font-size: 11px; text-align: justify;">We believe that the <strong class="red-bold">quality of power matters significantly</strong> and the primary objective of opting for an UPS should be to protect the high investment made on the equipment and the infrastructure apart from providing backup.</p>
-
-        <p style="margin: 4px 0; font-size: 11px; text-align: justify;">The non-linear loads pollute the quality of UPS power especially during peak-power operation; and this polluted power significantly impacts the life of the connected equipment.</p>
-
-        <p style="margin: 4px 0; font-size: 11px; text-align: justify;">Hence unlike the conventional UPS manufacturers, Arvi's approach is to ensure premium-grade power even during worst loading condition - which ensures 100% uptime and optimum product life of the connected equipment; justifying the huge investment on the same.</p>
-
-        <!-- PRINCIPLES -->
-        <div class="blue-header">PRINCIPLES THAT WE LIVE BY</div>
-
-        <div class="principles-box avoid-break">
-            <div class="shield-icon">
-                <div class="shield-placeholder">🛡️</div>
-            </div>
-            <div style="flex: 1; font-size: 11px;">
-                <p style="color: #5a6a7a; font-weight: 600; margin-bottom: 3px;">• Awarded as the best in-house R&D among Indian UPS manufacturers by SoftDisk</p>
-                <p style="margin-bottom: 3px;">• Manufacturer and exporter of industrial grade UPS for OEMs since 1998.</p>
-                <p style="margin-bottom: 3px;">• Using our 27 years of data and industry expertise, we are commited to proactively develop technological innovations that protect / ensure maximum retun on investment your investments in capital equipment and infrastructure.</p>
-                <p style="margin-bottom: 3px;">• Ensure lesser cost of ownership per year by providing premium grade quality power even during worst load conditionings.</p>
-                <p style="margin-bottom: 3px;">• Extending the number of years before the first breakdown (Maximise availability).</p>
-                <p>• Optimise the product life.</p>
-            </div>
-        </div>
-
-        <!-- MANUFACTURING FACILITY -->
-        <div class="blue-header">3. State-of-art manufacturing facility with Strong end to end in-house R&D team</div>
-
-        <div class="img-row avoid-break">
-            <% if (typeof isBase64 !=='undefined' && isBase64 && assetImages && assetImages['IMG-20260205-WA0007.jpg'])
-                { %>
-                <img src="<%= assetImages['IMG-20260205-WA0007.jpg'] %>" alt="Manufacturing 1">
-                <% } else { %>
-                    <img src="<%= assetsPath %>/IMG-20260205-WA0007.jpg" alt="Manufacturing 1">
-                    <% } %>
-                        <% if (typeof isBase64 !=='undefined' && isBase64 && assetImages &&
-                            assetImages['IMG-20260205-WA0008.jpg']) { %>
-                            <img src="<%= assetImages['IMG-20260205-WA0008.jpg'] %>" alt="Manufacturing 2">
-                            <% } else { %>
-                                <img src="<%= assetsPath %>/IMG-20260205-WA0008.jpg" alt="Manufacturing 2">
-                                <% } %>
-                                    <% if (typeof isBase64 !=='undefined' && isBase64 && assetImages &&
-                                        assetImages['IMG-20260205-WA0006.jpg']) { %>
-                                        <img src="<%= assetImages['IMG-20260205-WA0006.jpg'] %>" alt="Manufacturing 3">
-                                        <% } else { %>
-                                            <img src="<%= assetsPath %>/IMG-20260205-WA0006.jpg" alt="Manufacturing 3">
-                                            <% } %>
-        </div>
-
-        <div class="stats-row avoid-break">
-            <div class="stat">
-                <div class="number">27</div>
-                <div class="label"><span class="red">years</span> of industry expertise</div>
-            </div>
-            <div class="stat">
-                <div class="number">1,26,000+</div>
-                <div class="label"><span class="red">successful</span> installations</div>
-            </div>
-        </div>
-
-        <!-- TECHNICAL EXPERT INSIGHT -->
-        <div class="blue-header">Our technical expert's insight</div>
-
-        <div class="quote-box avoid-break">
-            <p>"We understand that eventhough the UPS continues to function and supply power without interuption, the connected equipment could fail due to failure of its power supply, any electrical / electronic component in the equipment - and one of the primary reason for such failures is quality of power ".</p>
-            <p>"We understand that the cost of downtime and premature failure of the connected equipment is very costly as the investment done on the same is very high. Arvi UPS primarily serves as a virtual insurance to your high cost investment serving as a high impedance power-conditioning power source apart from being a UPS ".</p>
-            <p>"Based on the load study conducted by our engineering team we have found that the quality of the UPS power determines the uninterupted process continuity and the product life of the connected equipment."</p>
-            <p>"Equipment availability /uninterupted functioning is directly linked to the quality of the UPS power. Hence our primary focus is on providing UPS that supplies premium grade quality power to the connected load even during the most extreme situvations."</p>
-        </div>
-
-        <div class="motto-box avoid-break">
-            <div class="motto-label">Our<br>motto</div>
-            <div style="flex: 1;">
-                <ul class="bullets">
-                    <li>Extending the number of years before the first breakdown (Maximise availability).</li>
-                    <li>Optimise the product life.</li>
                 </ul>
             </div>
         </div>
 
-        <!-- PROTECTION TABLE -->
-        <div class="blue-header">How does Arvi UPS ensure zero downtime of your equipment and process</div>
+        <div class="blue-header">Quotation Details</div>
 
-        <p style="margin: 4px 0; font-size: 11px;">Arvi UPS ensure zero downtime of your equipment and process by pre-trip alerts - Empowers the user / maintenance technicians with proactive alerts to enhance UPS uptime.</p>
+        <div class="section-title">Option I - <%= data.optionTitle %></div>
+        <div style="margin-bottom: 3mm;"><%- data.optionDetails %></div>
 
-        <ul class="bullets">
-            <li>Pre-trip alert for overtemperature on transformer and chokes.</li>
-            <li>Pre-trip alert for overtemperature inside the UPS due to fan failure or high ambient temperature. Protection for output AC capacitor failure.</li>
-            <li>Pre-trip alert for high crest loads (non-linear loads beyond the rated UPS capacity).</li>
-            <li>Pre-trip alert for overload (The UPS handles the load surge and overload for few minutes before tripping).</li>
-            <li>UPS is built through-out using fire resistant material for safety and reliability.</li>
-        </ul>
-
-        <!-- QUOTATION SECTION -->
-        <div class="option-header">Option I - <%= data.optionTitle || 'PFC-XR 303' %></div>
-        <div class="option-title">
-            <div class="model"><%= data.optionTitle || 'PFC-XR 303' %></div>
-            <div class="desc"><%= data.optionSubtitle || 'Online UPS - specially designed for laser cutting machines.' %></div>
-        </div>
-
-        <div class="tech-box avoid-break">
-            <div style="font-size: 11px;"><%- data.optionDetails %></div>
-        </div>
-
-        <table class="quote-table avoid-break">
+        <table>
             <thead>
                 <tr>
-                    <th>Sl No</th>
+                    <th style="width: 10mm;">Sl No</th>
                     <th>Description</th>
-                    <th>Unit price</th>
-                    <th>Qty</th>
-                    <th>Value</th>
+                    <th style="width: 25mm;">Unit Price</th>
+                    <th style="width: 15mm;">Qty</th>
+                    <th style="width: 30mm;">Value</th>
                 </tr>
             </thead>
             <tbody>
-                <% if (data.items && data.items.length> 0) { %>
-                    <% data.items.forEach(function(item) { %>
-                        <tr>
-                            <td><%= item.slno || '' %></td>
-                            <td style="text-align: left;"><%= item.description || '' %></td>
-                            <td><%= item.unitPrice || '' %></td>
-                            <td><%= item.qty || '' %></td>
-                            <td><%= item.value || '' %></td>
-                        </tr>
-                        <% }); %>
-                            <% } %>
+                <% data.items.forEach(function(item) { %>
+                <tr>
+                    <td style="text-align: center;"><%= item.slno %></td>
+                    <td><%= item.description %></td>
+                    <td style="text-align: right;"><%= item.unitPrice %></td>
+                    <td style="text-align: center;"><%= item.qty %></td>
+                    <td style="text-align: right;"><%= item.value %></td>
+                </tr>
+                <% }); %>
             </tbody>
         </table>
 
-        <!-- TOTAL SECTION -->
-        <% if (data.subtotal && data.subtotal> 0) { %>
-            <div class="total-section avoid-break">
-                <div class="total-row">
-                    <span class="total-label">Subtotal:</span>
-                    <span class="total-value">₹ <%= data.subtotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></span>
-                </div>
-                <div class="total-row">
-                    <span class="total-label">GST (18%):</span>
-                    <span class="total-value">₹ <%= data.gstAmount.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></span>
-                </div>
-                <div class="total-row grand-total">
-                    <span class="total-label">Grand Total:</span>
-                    <span class="total-value">₹ <%= data.grandTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></span>
-                </div>
+        <div class="total-box">
+            <div class="total-row"><span>Subtotal:</span> <span>₹ <%= data.subtotal.toLocaleString('en-IN') %></span></div>
+            <div class="total-row"><span>GST (18%):</span> <span>₹ <%= data.gstAmount.toLocaleString('en-IN') %></span></div>
+            <div class="total-row grand-total"><span>Grand Total:</span> <span>₹ <%= data.grandTotal.toLocaleString('en-IN') %></span></div>
+        </div>
+
+        <div class="signature">
+            <p>warm regards,</p>
+            <p><strong><%= data.signName %></strong></p>
+            <p><%= data.signDesig %></p>
+            <p>For Arvi Systems & Controls Pvt Ltd</p>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="page-footer">
+            <div class="footer-address">
+                <strong>ARVI SYSTEMS & CONTROLS PVT LTD</strong><br>
+                80/A2, 1st main, 3rd cross, 2nd phase, Industrial suburb, Yeshwanthpur, Bangalore - 560022<br>
+                Phone: 91 80 23470651 | Email: sales@arviups.com
             </div>
-            <% } %>
-
-                <% if (data.option2Title) { %>
-                    <div class="option-header">Option II - <%= data.option2Title %></div>
-                    <div class="option-title">
-                        <div><span class="red-bold">Premium model</span> - custom-design by Arvi;</div>
-                        <div class="desc"><%= data.option2Subtitle || "designed by a team of Arvi's in-house R&D engineers." %></div>
-                    </div>
-
-                    <table class="quote-table avoid-break">
-                        <thead>
-                            <tr>
-                                <th>Sl No</th>
-                                <th>Description</th>
-                                <th>Unit price</th>
-                                <th>Qty</th>
-                                <th>Value</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% if (data.option2Items && data.option2Items.length> 0) { %>
-                                <% data.option2Items.forEach(function(item) { %>
-                                    <tr>
-                                        <td><%= item.slno || '' %></td>
-                                        <td style="text-align: left;"><%= item.description || '' %></td>
-                                        <td><%= item.unitPrice || '' %></td>
-                                        <td><%= item.qty || '' %></td>
-                                        <td><%= item.value || '' %></td>
-                                    </tr>
-                                    <% }); %>
-                                        <% } %>
-                        </tbody>
-                    </table>
-                    <p style="text-align: center; margin: 6px 0; font-size: 11px;">Cost of batteries and batteries stand <strong>remains same</strong> as mentioned in 1b to 1f.</p>
-                    <% } %>
-
-                        <!-- TERMS & CONDITIONS -->
-                        <table class="terms-table avoid-break">
-                            <thead>
-                                <tr>
-                                    <th colspan="2">TERMS & CONDITIONS</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Price</td>
-                                    <td><%= data.priceLocation || 'For Bangalore.' %></td>
-                                </tr>
-                                <tr>
-                                    <td>GST</td>
-                                    <td><%= data.gstTerms || '18% extra on UPS, batteries and battery stand.' %></td>
-                                </tr>
-                                <tr>
-                                    <td>Delivery</td>
-                                    <td><%= data.delivery || 'Ex-works, within 2-3 weeks from receipt of confirmed order.' %></td>
-                                </tr>
-                                <tr>
-                                    <td>Payment</td>
-                                    <td><%= data.payment || '50% advance along with order, balance before dispatch.' %></td>
-                                </tr>
-                                <tr>
-                                    <td>FAT</td>
-                                    <td><%= data.fat || 'Factory Acceptance Test - We can arrange for a in-person / video online factory acceptance test of the UPS before despatch.' %></td>
-                                </tr>
-                                <tr>
-                                    <td>Warranty</td>
-                                    <td><%= data.warranty || '2 years comprehensive warranty on UPS from date of installation.' %></td>
-                                </tr>
-                                <tr>
-                                    <td>Validity</td>
-                                    <td><%= data.validity || '30 days' %></td>
-                                </tr>
-                                <tr>
-                                    <td>Updates</td>
-                                    <td><%= data.updates || 'You will be updated regularly about the status of progress in production.' %></td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <!-- SIGNATURE SECTION -->
-                        <div class="signature-section">
-                            <p>Please visit us at www.arviups.com</p>
-                            <p>We hope that our offer is in line with your requirements, kindly feel free to contact us for any clarification.</p>
-                            <p>Waiting for your valuable order and looking forward for an opportunity to serve you.</p>
-                            <p>Thanking you and assuring you of our best services at all times.</p>
-                            <p style="margin-top: 10px;">warm regards,</p>
-                            <p style="margin-top: 8px;"><strong><%= data.signName || 'Santosh Risbood' %></strong> - <%= data.signDesig || 'General Manager- OEM Business' %></p>
-                            <p>For Arvi Systems & Controls Pvt Ltd</p>
-                        </div>
-
-                        <!-- FOOTER PUSHER -->
-                        <div class="footer-pusher"></div>
-
-                        <!-- FOOTER -->
-                        <div class="footer">
-                            <div class="company-footer">
-                                <h4>ARVI SYSTEMS & CONTROLS PVT LTD</h4>
-                                <p>80/A2, 1st main, 3rd cross, 2nd phase, Industrial suburb, Yeshwanthpur, Bangalore - 560022, Karnataka, India</p>
-                                <p>Phone: 91 80 23470651, 23470658, Handphone: 91 9880101710, sales@arviups.com, enquiry@arviups.com</p>
-                            </div>
-                            <div class="cert-footer">
-                                <% if (typeof isBase64 !=='undefined' && isBase64 && assetImages &&
-                                    assetImages['IMG-20260205-WA0009.jpg']) { %>
-                                    <img src="<%= assetImages['IMG-20260205-WA0009.jpg'] %>" alt="Certifications">
-                                    <% } else { %>
-                                        <img src="<%= assetsPath %>/IMG-20260205-WA0009.jpg" alt="Certifications">
-                                        <% } %>
-                                            <span><strong class="red">Arvi</strong>UPS.com OEM manufacturers of Industrial grade UPS since 1998.</span>
-                            </div>
-                        </div>
+            <div class="footer-cert">
+                <% if (assetImages['img_cert.png']) { %>
+                    <img src="<%= assetImages['img_cert.png'] %>">
+                <% } %>
+                <span><strong>Arvi</strong>UPS.com - Industrial Grade UPS since 1998</span>
+            </div>
+        </div>
     </div>
 </body>
 

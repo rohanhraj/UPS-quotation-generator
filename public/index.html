@@ -6,327 +6,180 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ARVI Power - Quotation Generator</title>
     <link rel="stylesheet" href="/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Quill Rich Text Editor -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #1e40af;
+            --danger: #dc2626;
+            --bg: #f8fafc;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #1e293b; padding: 20px; }
+        .app-container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden; }
+        .app-header { background: var(--primary); color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { height: 40px; background: white; padding: 5px; border-radius: 4px; }
+        .form-section { padding: 25px; border-bottom: 1px solid #e2e8f0; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .section-header h2 { font-size: 1.2rem; color: var(--primary); font-weight: 700; }
+        .form-grid { display: grid; gap: 20px; margin-bottom: 20px; }
+        .cols-3 { grid-template-columns: repeat(3, 1fr); }
+        .cols-2 { grid-template-columns: repeat(2, 1fr); }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.9rem; }
+        input, textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; }
+        .rich-text-editor { height: 200px; margin-bottom: 10px; }
+        .items-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .items-table th { background: #f1f5f9; padding: 12px; text-align: left; font-size: 0.85rem; border-bottom: 2px solid #e2e8f0; }
+        .items-table td { padding: 10px; border-bottom: 1px solid #f1f5f9; }
+        .btn { padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; }
+        .btn-primary { background: white; color: var(--primary); }
+        .btn-secondary { background: rgba(255,255,255,0.2); color: white; margin-right: 10px; }
+        .btn-add { background: var(--primary); color: white; }
+        .btn-remove { color: var(--danger); background: none; font-size: 1.2rem; }
+        .total-section { margin-top: 20px; background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; max-width: 400px; margin-left: auto; }
+        .total-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 500; }
+        .grand-total { font-weight: 700; color: var(--danger); font-size: 1.1rem; border-top: 2px solid #e2e8f0; padding-top: 10px; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; padding: 40px; }
+        .modal.active { display: flex; align-items: center; justify-content: center; }
+        .modal-content { background: white; width: 100%; max-width: 900px; height: 90vh; border-radius: 12px; display: flex; flex-direction: column; }
+        .modal-header { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        iframe { flex: 1; border: none; }
+        .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.8); z-index: 200; flex-direction: column; align-items: center; justify-content: center; }
+        .loading-overlay.active { display: flex; }
+    </style>
 </head>
 
 <body>
     <div class="app-container">
-        <!-- Header -->
         <header class="app-header">
             <div class="logo-section">
-                <img src="/assets/IMG-20260205-WA0005.jpg" alt="ARVI Power" class="logo">
-                <div class="brand-info">
-                    <h1>Quotation Generator</h1>
-                    <p>ARVI Systems & Controls Pvt. Ltd.</p>
-                </div>
+                <img src="/assets/img_logo.png" alt="ARVI" class="logo">
+                <h1 style="margin-left: 15px; display: inline-block; vertical-align: middle;">Quotation Pro</h1>
             </div>
-            <div class="header-actions">
-                <button type="button" class="btn btn-secondary" id="previewBtn">
-                    <span class="icon">👁</span> Preview
-                </button>
-                <button type="button" class="btn btn-primary" id="generateBtn">
-                    <span class="icon">📄</span> Generate PDF
-                </button>
+            <div>
+                <button class="btn btn-secondary" id="previewBtn">Preview</button>
+                <button class="btn btn-primary" id="generateBtn">Save & Generate PDF</button>
             </div>
         </header>
 
-        <!-- Main Form -->
-        <main class="main-content">
-            <form id="quotationForm">
+        <form id="quotationForm">
+            <section class="form-section">
+                <div class="section-header"><h2>1. Quote Details</h2></div>
+                <div class="form-grid cols-3">
+                    <div class="form-group">
+                        <label>Quotation No.</label>
+                        <input type="text" id="quoteNumber" name="quoteNumber">
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="quoteDate" name="quoteDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Kind Attention</label>
+                        <input type="text" id="kindAttn" name="kindAttn">
+                    </div>
+                </div>
+                <div class="form-grid cols-2">
+                    <div class="form-group">
+                        <label>Customer Name</label>
+                        <input type="text" id="customerName" name="customerName">
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" id="customerAddress" name="customerAddress">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Introduction / Reference (Rich Text)</label>
+                    <div id="referenceTextEditor" class="rich-text-editor"></div>
+                    <input type="hidden" id="referenceText" name="referenceText">
+                </div>
+            </section>
 
-                <!-- Quote Reference (Page 1 Editable Section) -->
-                <section class="form-section">
-                    <div class="section-header">
-                        <h2><span class="section-icon">📋</span> Quotation Reference</h2>
+            <section class="form-section">
+                <div class="section-header">
+                    <h2>2. Line Items</h2>
+                    <button type="button" class="btn btn-add" id="addItemBtn">+ Add Item</button>
+                </div>
+                <div class="form-grid cols-2">
+                    <div class="form-group">
+                        <label>Option Title</label>
+                        <input type="text" name="optionTitle" value="PFC-XR 303">
                     </div>
-                    <p class="section-desc">This text will appear below the header on Page 1 of the quotation</p>
-                    <div class="form-grid cols-3">
-                        <div class="form-group">
-                            <label for="quoteNumber">Quotation No.</label>
-                            <input type="text" id="quoteNumber" name="quoteNumber" placeholder="ARVI/2026/001" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="quoteDate">Date</label>
-                            <input type="date" id="quoteDate" name="quoteDate" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="customerRef">Customer Ref</label>
-                            <input type="text" id="customerRef" name="customerRef" placeholder="Customer reference">
-                        </div>
+                    <div class="form-group">
+                        <label>Option Subtitle</label>
+                        <input type="text" name="optionSubtitle" value="Online UPS for Laser Cutting Machines">
                     </div>
-                    <div class="form-group full-width">
-                        <label for="referenceText">Reference Details (Site visits, meetings, etc.)</label>
-                        <div id="referenceTextEditor" class="rich-text-editor" style="height: 150px;"></div>
-                        <input type="hidden" id="referenceText" name="referenceText">
-                    </div>
-                    <div class="form-grid cols-2">
-                        <div class="form-group">
-                            <label for="customerName">Customer / Company Name</label>
-                            <input type="text" id="customerName" name="customerName" placeholder="Enter company name"
-                                required>
-                        </div>
-                        <div class="form-group">
-                            <label for="customerAddress">Address</label>
-                            <input type="text" id="customerAddress" name="customerAddress" placeholder="City, State">
-                        </div>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="kindAttn">Kind Attention</label>
-                        <input type="text" id="kindAttn" name="kindAttn" placeholder="Mr./Ms. Name, Designation">
-                    </div>
-                </section>
+                </div>
+                <div class="form-group">
+                    <label>Technical Details (Rich Text)</label>
+                    <div id="optionDetailsEditor" class="rich-text-editor"></div>
+                    <input type="hidden" id="optionDetails" name="optionDetails">
+                </div>
 
-                <!-- Product Options (Page 5 - Quotation Table) -->
-                <section class="form-section">
-                    <div class="section-header">
-                        <h2><span class="section-icon">⚡</span> Option I - Quotation Items</h2>
-                        <button type="button" class="btn btn-small btn-add" id="addItemBtn">+ Add Row</button>
-                    </div>
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">Sl No</th>
+                            <th>Description</th>
+                            <th style="width: 150px;">Unit Price</th>
+                            <th style="width: 80px;">Qty</th>
+                            <th style="width: 150px;">Value</th>
+                            <th style="width: 50px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="itemsTableBody">
+                        <tr>
+                            <td><input type="text" name="items[0][slno]" value="1" style="width: 60px;"></td>
+                            <td><textarea name="items[0][description]" rows="2"></textarea></td>
+                            <td><input type="number" name="items[0][unitPrice]" class="price-input" value="0"></td>
+                            <td><input type="number" name="items[0][qty]" class="qty-input" value="1"></td>
+                            <td><input type="text" name="items[0][value]" readonly class="value-input" value="0.00"></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
 
-                    <div class="form-grid cols-2">
-                        <div class="form-group">
-                            <label for="optionTitle">Option Title</label>
-                            <input type="text" id="optionTitle" name="optionTitle" value="PFC-XR303"
-                                placeholder="e.g., PFC-XR303">
-                        </div>
-                        <div class="form-group">
-                            <label for="optionSubtitle">Subtitle/Description</label>
-                            <input type="text" id="optionSubtitle" name="optionSubtitle"
-                                value="This is a power-conditioning topology Online UPS - specially designed for laser cutting machines."
-                                placeholder="Brief description">
-                        </div>
-                    </div>
+                <div class="total-section">
+                    <div class="total-row"><span>Subtotal:</span> <span id="subtotalDisplay">₹ 0.00</span></div>
+                    <div class="total-row"><span>GST (18%):</span> <span id="gstDisplay">₹ 0.00</span></div>
+                    <div class="total-row grand-total"><span>Grand Total:</span> <span id="grandTotalDisplay">₹ 0.00</span></div>
+                    <input type="hidden" id="subtotal" name="subtotal" value="0">
+                    <input type="hidden" id="gstAmount" name="gstAmount" value="0">
+                    <input type="hidden" id="grandTotal" name="grandTotal" value="0">
+                </div>
+            </section>
 
-                    <div class="form-group full-width">
-                        <label for="optionDetails">Technical Details (Bullet points)</label>
-                        <div id="optionDetailsEditor" class="rich-text-editor" style="height: 200px;"></div>
-                        <input type="hidden" id="optionDetails" name="optionDetails">
+            <section class="form-section">
+                <div class="section-header"><h2>3. Signatory</h2></div>
+                <div class="form-grid cols-2">
+                    <div class="form-group">
+                        <label>Signatory Name</label>
+                        <input type="text" name="signName" value="Santosh Risbood">
                     </div>
-
-                    <div id="itemsContainer">
-                        <table class="items-table">
-                            <thead>
-                                <tr>
-                                    <th style="width: 60px;">Sl No</th>
-                                    <th>Description</th>
-                                    <th style="width: 100px;">Unit Price</th>
-                                    <th style="width: 70px;">Qty</th>
-                                    <th style="width: 100px;">Value</th>
-                                    <th style="width: 50px;"></th>
-                                </tr>
-                            </thead>
-                            <tbody id="itemsTableBody">
-                                <tr class="item-row" data-index="0">
-                                    <td><input type="text" name="items[0][slno]" value="1" class="input-small"></td>
-                                    <td><textarea name="items[0][description]" rows="2"
-                                            placeholder="Description of item..."></textarea></td>
-                                    <td><input type="number" name="items[0][unitPrice]" class="price-input"
-                                            placeholder="0" onchange="calculateItemValue(0); calculateTotal();"></td>
-                                    <td><input type="number" name="items[0][qty]" value="1" min="1" class="qty-input"
-                                            onchange="calculateItemValue(0); calculateTotal();"></td>
-                                    <td><input type="text" name="items[0][value]" readonly class="value-input"></td>
-                                    <td><button type="button" class="btn-remove" onclick="removeItem(0)">✕</button></td>
-                                </tr>
-                                <tr class="item-row" data-index="1">
-                                    <td><input type="text" name="items[1][slno]" value="1a" class="input-small"></td>
-                                    <td><textarea name="items[1][description]" rows="2"
-                                            placeholder="Sub-item description..."></textarea></td>
-                                    <td><input type="number" name="items[1][unitPrice]" class="price-input"
-                                            placeholder="0" onchange="calculateItemValue(1); calculateTotal();"></td>
-                                    <td><input type="number" name="items[1][qty]" value="1" min="1" class="qty-input"
-                                            onchange="calculateItemValue(1); calculateTotal();"></td>
-                                    <td><input type="text" name="items[1][value]" readonly class="value-input"></td>
-                                    <td><button type="button" class="btn-remove" onclick="removeItem(1)">✕</button></td>
-                                </tr>
-                                <tr class="item-row" data-index="2">
-                                    <td><input type="text" name="items[2][slno]" value="1b" class="input-small"></td>
-                                    <td><textarea name="items[2][description]" rows="2"
-                                            placeholder="Sub-item description..."></textarea></td>
-                                    <td><input type="number" name="items[2][unitPrice]" class="price-input"
-                                            placeholder="0" onchange="calculateItemValue(2); calculateTotal();"></td>
-                                    <td><input type="number" name="items[2][qty]" value="1" min="1" class="qty-input"
-                                            onchange="calculateItemValue(2); calculateTotal();"></td>
-                                    <td><input type="text" name="items[2][value]" readonly class="value-input"></td>
-                                    <td><button type="button" class="btn-remove" onclick="removeItem(2)">✕</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="form-group">
+                        <label>Designation</label>
+                        <input type="text" name="signDesig" value="General Manager- OEM Business">
                     </div>
-
-                    <!-- Total Amount Section -->
-                    <div class="total-section">
-                        <div class="total-row">
-                            <span class="total-label">Subtotal:</span>
-                            <span class="total-value" id="subtotalDisplay">₹ 0.00</span>
-                            <input type="hidden" id="subtotal" name="subtotal" value="0">
-                        </div>
-                        <div class="total-row">
-                            <span class="total-label">GST (18%):</span>
-                            <span class="total-value" id="gstDisplay">₹ 0.00</span>
-                            <input type="hidden" id="gstAmount" name="gstAmount" value="0">
-                        </div>
-                        <div class="total-row grand-total">
-                            <span class="total-label">Grand Total:</span>
-                            <span class="total-value" id="grandTotalDisplay">₹ 0.00</span>
-                            <input type="hidden" id="grandTotal" name="grandTotal" value="0">
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Option II (Optional) -->
-                <section class="form-section collapsible">
-                    <div class="section-header" onclick="toggleSection(this)">
-                        <h2><span class="section-icon">⚡</span> Option II (Optional)</h2>
-                        <span class="collapse-icon">▼</span>
-                    </div>
-                    <div class="section-content">
-                        <div class="form-grid cols-2">
-                            <div class="form-group">
-                                <label for="option2Title">Option II Title</label>
-                                <input type="text" id="option2Title" name="option2Title"
-                                    placeholder="e.g., PFC-XR303HS">
-                            </div>
-                            <div class="form-group">
-                                <label for="option2Subtitle">Subtitle</label>
-                                <input type="text" id="option2Subtitle" name="option2Subtitle"
-                                    placeholder="Premium model - custom design by Arvi">
-                            </div>
-                        </div>
-                        <div class="form-group full-width">
-                            <label for="option2Details">Details</label>
-                            <textarea id="option2Details" name="option2Details" rows="3"
-                                placeholder="designed by a team of Arvi's in-house R&D engineers..."></textarea>
-                        </div>
-                        <div id="option2ItemsContainer">
-                            <table class="items-table">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 60px;">Sl No</th>
-                                        <th>Description</th>
-                                        <th style="width: 100px;">Unit Price</th>
-                                        <th style="width: 70px;">Qty</th>
-                                        <th style="width: 100px;">Value</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="option2TableBody">
-                                    <tr>
-                                        <td><input type="text" name="option2Items[0][slno]" value="2"
-                                                class="input-small"></td>
-                                        <td><textarea name="option2Items[0][description]" rows="2"
-                                                placeholder="Description..."></textarea></td>
-                                        <td><input type="number" name="option2Items[0][unitPrice]" class="price-input"
-                                                placeholder="0"></td>
-                                        <td><input type="number" name="option2Items[0][qty]" value="1" min="1"
-                                                class="qty-input"></td>
-                                        <td><input type="text" name="option2Items[0][value]" readonly
-                                                class="value-input"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <p class="note-text">Cost of batteries and batteries stand <strong>remains same</strong> as
-                            mentioned in 1b to 1f.</p>
-                    </div>
-                </section>
-
-                <!-- Terms & Conditions -->
-                <section class="form-section">
-                    <div class="section-header">
-                        <h2><span class="section-icon">📝</span> Terms & Conditions</h2>
-                    </div>
-                    <div class="form-grid cols-2">
-                        <div class="form-group">
-                            <label for="priceLocation">Price</label>
-                            <input type="text" id="priceLocation" name="priceLocation" value="For Bangalore">
-                        </div>
-                        <div class="form-group">
-                            <label for="gstTerms">GST</label>
-                            <input type="text" id="gstTerms" name="gstTerms"
-                                value="18% extra on UPS, batteries and battery stand.">
-                        </div>
-                        <div class="form-group">
-                            <label for="delivery">Delivery</label>
-                            <input type="text" id="delivery" name="delivery" placeholder="e.g., 2-3 weeks">
-                        </div>
-                        <div class="form-group">
-                            <label for="payment">Payment</label>
-                            <input type="text" id="payment" name="payment" placeholder="e.g., 100% Advance">
-                        </div>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="fat">FAT (Factory Acceptance Test)</label>
-                        <textarea id="fat" name="fat" rows="2"
-                            placeholder="Factory Acceptance Test (FAT) - We can arrange for a in-person / video online factory acceptance test of the UPS before despatch...">Factory Acceptance Test (FAT) - We can arrange for a in-person / video online factory acceptance test of the UPS before despatch; we will mail you the test report of the UPS and you could verify the parameters online via video call or in person in our factory.</textarea>
-                    </div>
-                    <div class="form-grid cols-2">
-                        <div class="form-group">
-                            <label for="warranty">Warranty</label>
-                            <input type="text" id="warranty" name="warranty" placeholder="e.g., 2 years">
-                        </div>
-                        <div class="form-group">
-                            <label for="validity">Validity</label>
-                            <input type="text" id="validity" name="validity" value="30 days">
-                        </div>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="updates">Updates</label>
-                        <textarea id="updates" name="updates"
-                            rows="2">You will be updated regularly about the status of progress in production (Image / Video); as the product moves from one section to another, we will send you updates.</textarea>
-                    </div>
-                </section>
-
-                <!-- Signatory -->
-                <section class="form-section">
-                    <div class="section-header">
-                        <h2><span class="section-icon">✍️</span> Signatory</h2>
-                    </div>
-                    <div class="form-grid cols-2">
-                        <div class="form-group">
-                            <label for="signName">Name</label>
-                            <input type="text" id="signName" name="signName" placeholder="e.g., Santosh Relopal">
-                        </div>
-                        <div class="form-group">
-                            <label for="signDesig">Designation</label>
-                            <input type="text" id="signDesig" name="signDesig"
-                                placeholder="e.g., General Manager- OEM Business">
-                        </div>
-                    </div>
-                </section>
-
-            </form>
-        </main>
-
-        <!-- Footer -->
-        <footer class="app-footer">
-            <p>© 2026 ARVI Systems & Controls Pvt. Ltd. | 27 Years of Excellence</p>
-        </footer>
+                </div>
+            </section>
+        </form>
     </div>
 
-    <!-- Preview Modal -->
     <div id="previewModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h3>Quotation Preview</h3>
-                <button class="modal-close" onclick="closePreview()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <iframe id="previewFrame" frameborder="0"></iframe>
-            </div>
+            <div class="modal-header"><h3>PDF Preview</h3><button onclick="closePreview()">✕</button></div>
+            <iframe id="previewFrame"></iframe>
         </div>
     </div>
 
-    <!-- Loading Overlay -->
     <div id="loadingOverlay" class="loading-overlay">
-        <div class="loading-spinner"></div>
-        <p>Generating PDF...</p>
+        <div style="width: 40px; height: 40px; border: 4px solid #eee; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite;"></div>
+        <p style="margin-top: 15px; font-weight: 600;">Generating Pixel-Perfect PDF...</p>
     </div>
 
-    <script src="/js/app.js?v=2"></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script src="/js/app.js"></script>
+    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
 </body>
-
 </html>
