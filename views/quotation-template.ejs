@@ -37,32 +37,14 @@
 
         /* Header */
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            padding-bottom: 5mm;
+            width: 100%;
             margin-bottom: 5mm;
+            text-align: center;
         }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 4mm;
-        }
-
-        .badge-img {
-            height: 45px;
-        }
-
-        .header-info {
-            font-size: 8pt;
-            color: #444;
-            max-width: 300px;
-            font-weight: 500;
-        }
-
-        .logo-img {
-            height: 40px;
+        .header-img {
+            width: 100%;
+            height: auto;
         }
 
         /* Blue Headers */
@@ -248,17 +230,8 @@
     <div class="container">
         <!-- HEADER -->
         <div class="header">
-            <div class="header-left">
-                <% if (assetImages && assetImages['img_badge.png']) { %>
-                    <img src="<%= assetImages['img_badge.png'] %>" class="badge-img">
-                <% } %>
-                <div class="header-info">
-                    ISO 9001:2015<br>
-                    Rated as the BEST In-House R&D among Indian UPS manufacturers by SD.
-                </div>
-            </div>
-            <% if (assetImages && assetImages['img_logo.png']) { %>
-                <img src="<%= assetImages['img_logo.png'] %>" class="logo-img">
+            <% if (assetImages['new_header.jpg']) { %>
+                <img src="<%= assetImages['new_header.jpg'] %>" class="header-img">
             <% } %>
         </div>
 
