@@ -6,201 +6,184 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ARVI Power - Quotation Generator</title>
     <link rel="stylesheet" href="/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Quill Rich Text Editor -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #1e40af;
-            --danger: #dc2626;
-            --bg: #f8fafc;
-        }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #1e293b; padding: 20px; }
-        .app-container { max-width: 1100px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden; }
-        .app-header { background: var(--primary); color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .logo { height: 40px; background: white; padding: 5px; border-radius: 4px; }
-        .form-section { padding: 25px; border-bottom: 1px solid #e2e8f0; }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .section-header h2 { font-size: 1.2rem; color: var(--primary); font-weight: 700; }
-        .form-grid { display: grid; gap: 20px; margin-bottom: 20px; }
-        .cols-3 { grid-template-columns: repeat(3, 1fr); }
-        .cols-2 { grid-template-columns: repeat(2, 1fr); }
-        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.9rem; }
-        input, textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; }
-        
-        /* Universal Editor Class */
-        .rich-text-wrapper { margin-bottom: 15px; }
-        .rich-text-editor { height: 120px; background: white; border-radius: 0 0 6px 6px; }
-        .ql-toolbar { border-radius: 6px 6px 0 0; background: #f8fafc; }
-        
-        .items-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .items-table th { background: #f1f5f9; padding: 12px; text-align: left; font-size: 0.85rem; border-bottom: 2px solid #e2e8f0; }
-        .items-table td { padding: 10px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
-        
-        .btn { padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; }
-        .btn-primary { background: white; color: var(--primary); }
-        .btn-secondary { background: rgba(255,255,255,0.2); color: white; margin-right: 10px; }
-        .btn-add { background: var(--primary); color: white; }
-        .btn-remove { color: var(--danger); background: none; font-size: 1.2rem; }
-        
-        .total-section { margin-top: 20px; background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; max-width: 400px; margin-left: auto; }
-        .total-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 500; }
-        .grand-total { font-weight: 700; color: var(--danger); font-size: 1.1rem; border-top: 2px solid #e2e8f0; padding-top: 10px; }
-        
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; padding: 40px; }
-        .modal.active { display: flex; align-items: center; justify-content: center; }
-        .modal-content { background: white; width: 100%; max-width: 1000px; height: 90vh; border-radius: 12px; display: flex; flex-direction: column; }
-        .modal-header { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
-        iframe { flex: 1; border: none; }
-        
-        .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.8); z-index: 200; flex-direction: column; align-items: center; justify-content: center; }
-        .loading-overlay.active { display: flex; }
-        
-        @keyframes spin { to { transform: rotate(360deg); } }
-    </style>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
 <body>
     <div class="app-container">
+        <!-- Header -->
         <header class="app-header">
             <div class="logo-section">
-                <img src="/assets/new_header.jpg" alt="ARVI" class="logo" style="background:none;">
-                <h1 style="margin-left: 15px; display: inline-block; vertical-align: middle;">Quotation Pro</h1>
+                <img src="/assets/IMG-20260205-WA0005.jpg" alt="ARVI Power" class="logo">
+                <div class="brand-info">
+                    <h1>Quotation Generator</h1>
+                    <p>ARVI Systems & Controls Pvt. Ltd.</p>
+                </div>
             </div>
-            <div>
-                <button class="btn btn-secondary" id="previewBtn">Preview</button>
-                <button class="btn btn-primary" id="generateBtn">Save & Generate PDF</button>
+            <div class="header-actions">
+                <button type="button" class="btn btn-secondary" id="previewBtn">
+                    <span class="icon">👁</span> Preview
+                </button>
+                <button type="button" class="btn btn-primary" id="generateBtn">
+                    <span class="icon">📄</span> Generate PDF
+                </button>
             </div>
         </header>
 
-        <form id="quotationForm">
-            <section class="form-section">
-                <div class="section-header"><h2>1. Document Info</h2></div>
-                <div class="form-grid cols-3">
-                    <div class="form-group">
-                        <label>Quotation No.</label>
-                        <input type="text" id="quoteNumber" name="quoteNumber">
-                    </div>
-                    <div class="form-group">
-                        <label>Date</label>
-                        <input type="date" id="quoteDate" name="quoteDate">
-                    </div>
-                    <div class="form-group">
-                        <label>Kind Attention</label>
-                        <div class="rich-text-wrapper">
-                            <div id="kindAttnEditor" class="rich-text-editor"></div>
-                            <input type="hidden" name="kindAttn" id="kindAttn">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-grid cols-2">
-                    <div class="form-group">
-                        <label>Customer Name</label>
-                        <div class="rich-text-wrapper">
-                            <div id="customerNameEditor" class="rich-text-editor"></div>
-                            <input type="hidden" name="customerName" id="customerName">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Address</label>
-                        <div class="rich-text-wrapper">
-                            <div id="customerAddressEditor" class="rich-text-editor"></div>
-                            <input type="hidden" name="customerAddress" id="customerAddress">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Introduction / Reference (Main Body)</label>
-                    <div class="rich-text-wrapper">
-                        <div id="referenceTextEditor" class="rich-text-editor" style="height: 180px;"></div>
-                        <input type="hidden" name="referenceText" id="referenceText">
-                    </div>
-                </div>
-            </section>
+        <!-- Main Form -->
+        <main class="main-content">
+            <form id="quotationForm">
 
-            <section class="form-section">
-                <div class="section-header">
-                    <h2>2. Line Items</h2>
-                    <button type="button" class="btn btn-add" id="addItemBtn">+ Add Item</button>
-                </div>
-                
-                <div class="form-group">
-                    <label>Option Title</label>
-                    <div class="rich-text-wrapper">
-                        <div id="optionTitleEditor" class="rich-text-editor"></div>
-                        <input type="hidden" name="optionTitle" id="optionTitle">
+                <!-- Quote Reference (Page 1 Editable Section) -->
+                <section class="form-section">
+                    <div class="section-header">
+                        <h2><span class="section-icon">📋</span> Quotation Reference</h2>
                     </div>
-                </div>
+                    <p class="section-desc">This text will appear below the header on Page 1 of the quotation</p>
+                    <div class="form-grid cols-2">
+                        <div class="form-group">
+                            <label for="quoteNumber">Quotation No.</label>
+                            <input type="text" id="quoteNumber" name="quoteNumber" placeholder="ARVI/2026/001" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="quoteDate">Date</label>
+                            <input type="date" id="quoteDate" name="quoteDate" required>
+                        </div>
+                    </div>
+                    <div class="form-grid cols-2">
+                        <div class="form-group">
+                            <label for="customerName">Customer / Company Name (Rich Text)</label>
+                            <div id="customerNameEditor" class="rich-text-editor" style="height: 80px;"></div>
+                            <input type="hidden" id="customerName" name="customerName">
+                        </div>
+                        <div class="form-group">
+                            <label for="customerAddress">Address (Rich Text)</label>
+                            <div id="customerAddressEditor" class="rich-text-editor" style="height: 80px;"></div>
+                            <input type="hidden" id="customerAddress" name="customerAddress">
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="kindAttn">Kind Attention (Rich Text)</label>
+                        <div id="kindAttnEditor" class="rich-text-editor" style="height: 80px;"></div>
+                        <input type="hidden" id="kindAttn" name="kindAttn">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="referenceText">Reference Details (Rich Text)</label>
+                        <div id="referenceTextEditor" class="rich-text-editor" style="height: 150px;"></div>
+                        <input type="hidden" id="referenceText" name="referenceText">
+                    </div>
+                </section>
 
-                <div class="form-group">
-                    <label>Option Subtitle/Tech Details</label>
-                    <div class="rich-text-wrapper">
+                <!-- Product Options (Page 5 - Quotation Table) -->
+                <section class="form-section">
+                    <div class="section-header">
+                        <h2><span class="section-icon">⚡</span> Option I - Quotation Items</h2>
+                        <button type="button" class="btn btn-small btn-add" id="addItemBtn">+ Add Row</button>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="optionTitle">Option Title (Rich Text)</label>
+                        <div id="optionTitleEditor" class="rich-text-editor" style="height: 80px;"></div>
+                        <input type="hidden" id="optionTitle" name="optionTitle">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="optionDetails">Technical Details (Rich Text)</label>
                         <div id="optionDetailsEditor" class="rich-text-editor" style="height: 150px;"></div>
-                        <input type="hidden" name="optionDetails" id="optionDetails">
+                        <input type="hidden" id="optionDetails" name="optionDetails">
                     </div>
-                </div>
 
-                <table class="items-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 80px;">Sl No</th>
-                            <th>Description</th>
-                            <th style="width: 150px;">Unit Price</th>
-                            <th style="width: 80px;">Qty</th>
-                            <th style="width: 150px;">Value</th>
-                            <th style="width: 50px;"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="itemsTableBody">
-                        <!-- Items will be injected here with unique editors -->
-                    </tbody>
-                </table>
+                    <div id="itemsContainer">
+                        <table class="items-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 60px;">Sl No</th>
+                                    <th>Description</th>
+                                    <th style="width: 100px;">Unit Price</th>
+                                    <th style="width: 70px;">Qty</th>
+                                    <th style="width: 100px;">Value</th>
+                                    <th style="width: 50px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="itemsTableBody">
+                                <!-- Row template used in app.js -->
+                            </tbody>
+                        </table>
+                    </div>
 
-                <div class="total-section">
-                    <div class="total-row"><span>Subtotal:</span> <span id="subtotalDisplay">₹ 0.00</span></div>
-                    <div class="total-row"><span>GST (18%):</span> <span id="gstDisplay">₹ 0.00</span></div>
-                    <div class="total-row grand-total"><span>Grand Total:</span> <span id="grandTotalDisplay">₹ 0.00</span></div>
-                    <input type="hidden" id="subtotal" name="subtotal" value="0">
-                    <input type="hidden" id="gstAmount" name="gstAmount" value="0">
-                    <input type="hidden" id="grandTotal" name="grandTotal" value="0">
-                </div>
-            </section>
-
-            <section class="form-section">
-                <div class="section-header"><h2>3. Signatory</h2></div>
-                <div class="form-grid cols-2">
-                    <div class="form-group">
-                        <label>Signatory Name</label>
-                        <div class="rich-text-wrapper">
-                            <div id="signNameEditor" class="rich-text-editor"></div>
-                            <input type="hidden" name="signName" id="signName">
+                    <!-- Total Amount Section -->
+                    <div class="total-section">
+                        <div class="total-row">
+                            <span class="total-label">Subtotal:</span>
+                            <span class="total-value" id="subtotalDisplay">₹ 0.00</span>
+                            <input type="hidden" id="subtotal" name="subtotal" value="0">
+                        </div>
+                        <div class="total-row">
+                            <span class="total-label">GST (18%):</span>
+                            <span class="total-value" id="gstDisplay">₹ 0.00</span>
+                            <input type="hidden" id="gstAmount" name="gstAmount" value="0">
+                        </div>
+                        <div class="total-row grand-total">
+                            <span class="total-label">Grand Total:</span>
+                            <span class="total-value" id="grandTotalDisplay">₹ 0.00</span>
+                            <input type="hidden" id="grandTotal" name="grandTotal" value="0">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label>Designation</label>
-                        <div class="rich-text-wrapper">
-                            <div id="signDesigEditor" class="rich-text-editor"></div>
-                            <input type="hidden" name="signDesig" id="signDesig">
+                </section>
+
+                <!-- Signatory -->
+                <section class="form-section">
+                    <div class="section-header">
+                        <h2><span class="section-icon">✍️</span> Signatory</h2>
+                    </div>
+                    <div class="form-grid cols-2">
+                        <div class="form-group">
+                            <label for="signName">Name (Rich Text)</label>
+                            <div id="signNameEditor" class="rich-text-editor" style="height: 80px;"></div>
+                            <input type="hidden" id="signName" name="signName">
+                        </div>
+                        <div class="form-group">
+                            <label for="signDesig">Designation (Rich Text)</label>
+                            <div id="signDesigEditor" class="rich-text-editor" style="height: 80px;"></div>
+                            <input type="hidden" id="signDesig" name="signDesig">
                         </div>
                     </div>
-                </div>
-            </section>
-        </form>
+                </section>
+
+            </form>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>© 2026 ARVI Systems & Controls Pvt. Ltd. | 27 Years of Excellence</p>
+        </footer>
     </div>
 
+    <!-- Preview Modal -->
     <div id="previewModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header"><h3>PDF Preview</h3><button onclick="closePreview()">✕</button></div>
-            <iframe id="previewFrame"></iframe>
+            <div class="modal-header">
+                <h3>Quotation Preview</h3>
+                <button class="modal-close" onclick="closePreview()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <iframe id="previewFrame" frameborder="0"></iframe>
+            </div>
         </div>
     </div>
 
+    <!-- Loading Overlay -->
     <div id="loadingOverlay" class="loading-overlay">
-        <div style="width: 40px; height: 40px; border: 4px solid #eee; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite;"></div>
-        <p style="margin-top: 15px; font-weight: 600;">Generating Rich-Text PDF...</p>
+        <div class="loading-spinner"></div>
+        <p>Generating PDF...</p>
     </div>
 
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script src="/js/app.js"></script>
 </body>
+
 </html>

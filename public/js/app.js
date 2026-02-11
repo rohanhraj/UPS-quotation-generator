@@ -2,10 +2,9 @@
 let quillInstances = {};
 
 const toolbarOptions = [
-    ['bold', 'italic', 'underline', 'strike'],
-    [{ 'color': [] }, { 'background': [] }],
+    ['bold', 'italic', 'underline'],
+    [{ 'color': [] }],
     [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-    [{ 'align': [] }],
     ['clean']
 ];
 
@@ -13,35 +12,35 @@ document.addEventListener('DOMContentLoaded', function () {
     initializeStaticEditors();
     initializeForm();
     setupEventListeners();
-    // Start with 1 item
-    addItem();
+    addItem(); // Start with one row
 });
 
 function createEditor(selector, placeholder = '') {
     const quill = new Quill(selector, {
         theme: 'snow',
         placeholder: placeholder,
-        modules: { toolbar: toolbarOptions }
+        modules: {
+            toolbar: toolbarOptions
+        }
     });
     quillInstances[selector] = quill;
     return quill;
 }
 
 function initializeStaticEditors() {
-    createEditor('#kindAttnEditor', 'Kind Attention...');
     createEditor('#customerNameEditor', 'Customer Name...');
     createEditor('#customerAddressEditor', 'Address...');
-    createEditor('#referenceTextEditor', 'Main quotation body...');
+    createEditor('#kindAttnEditor', 'Kind Attention...');
+    createEditor('#referenceTextEditor', 'Main reference details...');
     createEditor('#optionTitleEditor', 'Option Title...');
-    createEditor('#optionDetailsEditor', 'Technical Details...');
-    createEditor('#signNameEditor', 'Signatory Name...');
+    createEditor('#optionDetailsEditor', 'Technical details...');
+    createEditor('#signNameEditor', 'Signatory name...');
     createEditor('#signDesigEditor', 'Designation...');
 
-    // Set Defaults
+    // Set initial values
     quillInstances['#referenceTextEditor'].clipboard.dangerouslyPasteHTML('<p>Dear Sir/Madam,</p><p><br></p><p>With reference to your enquiry, we are pleased to submit our quotation:</p>');
     quillInstances['#optionTitleEditor'].clipboard.dangerouslyPasteHTML('<p><strong>PFC-XR 303</strong></p>');
     quillInstances['#signNameEditor'].clipboard.dangerouslyPasteHTML('<p><strong>Santosh Risbood</strong></p>');
-    quillInstances['#signDesigEditor'].clipboard.dangerouslyPasteHTML('<p>General Manager - OEM Business</p>');
 }
 
 function initializeForm() {
@@ -50,33 +49,6 @@ function initializeForm() {
     const year = today.getFullYear();
     const randomNum = String(Math.floor(Math.random() * 999) + 1).padStart(3, '0');
     document.getElementById('quoteNumber').value = `ARVI/${year}/${randomNum}`;
-}
-
-let itemCounter = 0;
-function addItem() {
-    const id = `item-desc-${itemCounter}`;
-    const tbody = document.getElementById('itemsTableBody');
-    const row = document.createElement('tr');
-    row.innerHTML = `
-        <td><input type="text" class="slno-input" value="${itemCounter + 1}" style="width: 60px;"></td>
-        <td>
-            <div id="${id}" style="height: 80px; background: white;"></div>
-        </td>
-        <td><input type="number" class="price-input" value="0"></td>
-        <td><input type="number" class="qty-input" value="1"></td>
-        <td><input type="text" class="value-input" readonly value="0.00"></td>
-        <td><button type="button" class="btn-remove" onclick="this.closest('tr').remove(); calculateTotal();">✕</button></td>
-    `;
-    tbody.appendChild(row);
-    
-    // Initialize Quill for this description
-    const quill = new Quill(`#${id}`, {
-        theme: 'snow',
-        modules: { toolbar: [['bold', 'italic', { 'color': [] }, 'clean']] }
-    });
-    quillInstances[`#${id}`] = quill;
-
-    itemCounter++;
 }
 
 function setupEventListeners() {
@@ -89,6 +61,32 @@ function setupEventListeners() {
             calculateTotal();
         }
     });
+}
+
+let itemCounter = 0;
+function addItem() {
+    const tbody = document.getElementById('itemsTableBody');
+    const row = document.createElement('tr');
+    const descId = `item-desc-${itemCounter}`;
+    
+    row.innerHTML = `
+        <td><input type="text" class="slno-input" value="${itemCounter + 1}" style="width: 40px;"></td>
+        <td><div id="${descId}" style="height: 60px; background: white;"></div></td>
+        <td><input type="number" class="price-input" value="0"></td>
+        <td><input type="number" class="qty-input" value="1"></td>
+        <td><input type="text" class="value-input" readonly value="0.00"></td>
+        <td><button type="button" class="btn-remove" onclick="this.closest('tr').remove(); calculateTotal();">✕</button></td>
+    `;
+    
+    tbody.appendChild(row);
+    
+    const quill = new Quill(`#${descId}`, {
+        theme: 'snow',
+        modules: { toolbar: [['bold', 'italic', { 'color': [] }, 'clean']] }
+    });
+    quillInstances[`#${descId}`] = quill;
+    
+    itemCounter++;
 }
 
 function calculateTotal() {
@@ -113,11 +111,10 @@ function calculateTotal() {
     document.getElementById('grandTotal').value = grand;
 }
 
-function syncAllRichText() {
-    // Standard fields
-    document.getElementById('kindAttn').value = quillInstances['#kindAttnEditor'].root.innerHTML;
+function syncRichText() {
     document.getElementById('customerName').value = quillInstances['#customerNameEditor'].root.innerHTML;
     document.getElementById('customerAddress').value = quillInstances['#customerAddressEditor'].root.innerHTML;
+    document.getElementById('kindAttn').value = quillInstances['#kindAttnEditor'].root.innerHTML;
     document.getElementById('referenceText').value = quillInstances['#referenceTextEditor'].root.innerHTML;
     document.getElementById('optionTitle').value = quillInstances['#optionTitleEditor'].root.innerHTML;
     document.getElementById('optionDetails').value = quillInstances['#optionDetailsEditor'].root.innerHTML;
@@ -126,7 +123,7 @@ function syncAllRichText() {
 }
 
 function getFormData() {
-    syncAllRichText();
+    syncRichText();
     const form = document.getElementById('quotationForm');
     const formData = new FormData(form);
     const data = {};
@@ -146,10 +143,6 @@ function getFormData() {
             value: (parseFloat(row.querySelector('.price-input').value) || 0) * (parseFloat(row.querySelector('.qty-input').value) || 0)
         });
     });
-
-    data.subtotal = parseFloat(document.getElementById('subtotal').value);
-    data.gstAmount = parseFloat(document.getElementById('gstAmount').value);
-    data.grandTotal = parseFloat(document.getElementById('grandTotal').value);
 
     return data;
 }

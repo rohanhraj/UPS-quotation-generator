@@ -30,7 +30,7 @@
             max-width: 210mm;
             width: 100%;
             margin: 0 auto;
-            padding: 15mm 15mm 25mm 15mm;
+            padding: 15mm 15mm 30mm 15mm;
             position: relative;
             min-height: 100vh;
         }
@@ -95,10 +95,9 @@
             margin: 1mm 0;
         }
 
-        .ref-details {
-            margin-top: 3mm;
-            text-align: justify;
-        }
+        .rich-text p { margin-bottom: 1mm; }
+        .rich-text ul, .rich-text ol { padding-left: 5mm; margin-bottom: 2mm; }
+        .rich-text li { margin-bottom: 0.5mm; }
 
         /* Section Title */
         .section-title {
@@ -108,7 +107,7 @@
             color: #1e40af;
         }
 
-        /* Content Layout */
+        /* Content Block */
         .content-block {
             display: flex;
             gap: 5mm;
@@ -131,15 +130,6 @@
             flex: 1;
             text-align: justify;
         }
-
-        .text-content p {
-            margin-bottom: 2mm;
-        }
-
-        /* Rich Text Normalization for PDF */
-        .rich-text p { margin-bottom: 1mm; }
-        .rich-text ul, .rich-text ol { padding-left: 5mm; margin-bottom: 2mm; }
-        .rich-text li { margin-bottom: 0.5mm; }
 
         /* Tables */
         table {
@@ -185,14 +175,9 @@
             font-weight: 700;
         }
 
-        /* Signature */
         .signature {
             margin-top: 10mm;
             font-size: 10pt;
-        }
-
-        .page-break {
-            page-break-before: always;
         }
 
         @media print {
@@ -218,17 +203,17 @@
             <p><strong>Date:</strong> <%= data.quoteDate %></p>
             
             <div style="margin-top: 2mm;" class="rich-text">
-                <p><strong>To:</strong></p>
-                <%- data.customerName %>
+                <span style="font-weight: bold;">To:</span><br>
+                <%- data.customerName %><br>
                 <%- data.customerAddress %>
             </div>
 
             <div style="margin-top: 2mm;" class="rich-text">
-                <p><strong>Kind Attn:</strong></p>
+                <span style="font-weight: bold;">Kind Attn:</span><br>
                 <%- data.kindAttn %>
             </div>
             
-            <div class="ref-details rich-text">
+            <div style="margin-top: 3mm;" class="rich-text">
                 <%- data.referenceText %>
             </div>
         </div>
