@@ -387,6 +387,26 @@ textarea::placeholder {
     font-weight: 700;
 }
 
+/* Rich Text Editor Styling */
+.rich-text-editor {
+    height: 200px;
+    background: white;
+}
+
+.ql-toolbar.ql-snow {
+    border-color: var(--border-color);
+    border-top-left-radius: var(--radius-sm);
+    border-top-right-radius: var(--radius-sm);
+}
+
+.ql-container.ql-snow {
+    border-color: var(--border-color);
+    border-bottom-left-radius: var(--radius-sm);
+    border-bottom-right-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 14px;
+}
+
 /* Footer */
 .app-footer {
     text-align: center;

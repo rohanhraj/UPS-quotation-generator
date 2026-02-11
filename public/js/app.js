@@ -1,10 +1,47 @@
 // ARVI Quotation Generator - App JavaScript
+let quillRef, quillDetails;
+
 document.addEventListener('DOMContentLoaded', function () {
+    initializeEditors();
     initializeForm();
     setupEventListeners();
+    calculateTotal(); // Initial calculation
 });
 
-let itemIndex = 3; // Start from 3 since we have 3 initial rows
+let itemIndex = 3; 
+
+function initializeEditors() {
+    const toolbarOptions = [
+        ['bold', 'italic', 'underline'],
+        [{ 'color': [] }],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        ['clean']
+    ];
+
+    quillRef = new Quill('#referenceTextEditor', {
+        theme: 'snow',
+        placeholder: 'Dear Sir/Madam,\n\nWith reference to your enquiry...',
+        modules: {
+            toolbar: toolbarOptions
+        }
+    });
+
+    quillDetails = new Quill('#optionDetailsEditor', {
+        theme: 'snow',
+        placeholder: 'Enter technical details...',
+        modules: {
+            toolbar: toolbarOptions
+        }
+    });
+
+    // Set initial values for Quill
+    const initialRefText = `<p>Dear Sir/Madam,</p><p><br></p><p>With reference to your enquiry and our site visit dated ________, we are pleased to submit our quotation for the following:</p><p><br></p><p>[Add any other reference details here]</p>`;
+    
+    const initialDetailsText = `<p>VFI power-conditioning topology with galvanic isolation for comprehensive power protection.</p><p>The downtime in a process is not only due to failure of power but also due to breakdown of any machines in the production line - mainly the failure of electrical or electronic parts in the machine.</p><p>Power experts attribute this failure to the poor quality of power.</p><ul><li>Galvanic isolation at the output for comprehensive power protection</li><li>Generator compatible with all KVA and Power Factor</li><li>Long life, designed for maintenance and environment</li><li>Fully DSP Controlled</li><li>HF/VHF IGBT based inverter (Operated in Zero current switching, Interleaved)</li></ul>`;
+
+    quillRef.clipboard.dangerouslyPasteHTML(initialRefText);
+    quillDetails.clipboard.dangerouslyPasteHTML(initialDetailsText);
+}
 
 function initializeForm() {
     // Set default date
@@ -30,6 +67,14 @@ function setupEventListeners() {
     // Close modal on click outside
     document.getElementById('previewModal').addEventListener('click', function (e) {
         if (e.target === this) closePreview();
+    });
+
+    // Listen for changes in Option 2 table
+    document.getElementById('option2TableBody').addEventListener('input', function(e) {
+        if (e.target.classList.contains('price-input') || e.target.classList.contains('qty-input')) {
+            const row = e.target.closest('tr');
+            calculateRowValue(row);
+        }
     });
 }
 
@@ -63,19 +108,21 @@ function removeItem(index) {
 function calculateItemValue(index) {
     const row = document.querySelector(`.item-row[data-index="${index}"]`);
     if (!row) return;
+    calculateRowValue(row);
+}
 
+function calculateRowValue(row) {
     const price = parseFloat(row.querySelector('.price-input').value) || 0;
     const qty = parseInt(row.querySelector('.qty-input').value) || 1;
     const value = price * qty;
-
     row.querySelector('.value-input').value = formatIndianNumber(value);
 }
 
 function calculateTotal() {
     let subtotal = 0;
 
-    // Sum all item values
-    document.querySelectorAll('#itemsTableBody .item-row').forEach(row => {
+    // Sum all item values from Option 1
+    document.querySelectorAll('#itemsTableBody tr').forEach(row => {
         const price = parseFloat(row.querySelector('.price-input')?.value) || 0;
         const qty = parseInt(row.querySelector('.qty-input')?.value) || 1;
         subtotal += price * qty;
@@ -107,6 +154,10 @@ function toggleSection(header) {
 }
 
 function getFormData() {
+    // Sync Quill editors to hidden fields
+    document.getElementById('referenceText').value = quillRef.root.innerHTML;
+    document.getElementById('optionDetails').value = quillDetails.root.innerHTML;
+
     const form = document.getElementById('quotationForm');
     const formData = new FormData(form);
     const data = {};
@@ -120,9 +171,9 @@ function getFormData() {
 
     // Get items
     data.items = [];
-    document.querySelectorAll('#itemsTableBody .item-row').forEach(row => {
+    document.querySelectorAll('#itemsTableBody tr').forEach(row => {
         const slno = row.querySelector('input[name*="[slno]"]')?.value || '';
-        const description = row.querySelector('textarea[name*="[description]"]')?.value || '';
+        const description = row.querySelector('textarea[name*="[description]"]')?.value || row.querySelector('input[name*="[description]"]')?.value || '';
         const unitPrice = row.querySelector('.price-input')?.value || '';
         const qty = row.querySelector('.qty-input')?.value || '1';
         const value = row.querySelector('.value-input')?.value || '';
@@ -136,7 +187,7 @@ function getFormData() {
     data.option2Items = [];
     document.querySelectorAll('#option2TableBody tr').forEach(row => {
         const slno = row.querySelector('input[name*="[slno]"]')?.value || '';
-        const description = row.querySelector('textarea[name*="[description]"]')?.value || '';
+        const description = row.querySelector('textarea[name*="[description]"]')?.value || row.querySelector('input[name*="[description]"]')?.value || '';
         const unitPrice = row.querySelector('.price-input')?.value || '';
         const qty = row.querySelector('.qty-input')?.value || '1';
         const value = row.querySelector('.value-input')?.value || '';
@@ -146,8 +197,9 @@ function getFormData() {
         }
     });
 
-    // Capture referenceText explicitly from the form field
+    // Capture rich text explicitly
     data.referenceText = document.getElementById('referenceText').value;
+    data.optionDetails = document.getElementById('optionDetails').value;
 
     // Get totals
     data.subtotal = parseFloat(document.getElementById('subtotal').value) || 0;
