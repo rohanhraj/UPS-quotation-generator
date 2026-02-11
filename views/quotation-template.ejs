@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>ARVI Power - Quotation</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
 
         * {
             margin: 0;
@@ -13,32 +13,39 @@
             box-sizing: border-box;
         }
 
-        html,
-        body {
-            height: 100%;
+        @page {
+            size: A4;
+            margin: 0;
         }
 
         body {
-            font-family: 'Roboto', Arial, sans-serif;
+            font-family: 'Open Sans', Arial, sans-serif;
             font-size: 10pt;
-            line-height: 1.3;
+            line-height: 1.4;
             color: #333;
             background: white;
+            -webkit-print-color-adjust: exact;
         }
 
-        .container {
-            max-width: 210mm;
-            width: 100%;
-            margin: 0 auto;
-            padding: 15mm 15mm 30mm 15mm;
-            position: relative;
+        /* 
+           Wrapper for the whole document to handle footer placement.
+           Using flex column with height 100vh ensures the footer stays at bottom of last page.
+        */
+        .doc-wrapper {
+            display: flex;
+            flex-direction: column;
             min-height: 100vh;
+            padding: 15mm 15mm 0 15mm;
+        }
+
+        .content-area {
+            flex: 1;
         }
 
         /* Header */
         .header {
             width: 100%;
-            margin-bottom: 5mm;
+            margin-bottom: 8mm;
             text-align: center;
         }
 
@@ -47,83 +54,60 @@
             height: auto;
         }
 
-        /* Footer */
-        .page-footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 0 15mm 10mm 15mm;
-            text-align: center;
-        }
-
-        .footer-img {
-            width: 100%;
-            max-width: 180mm;
-            height: auto;
-        }
-
-        /* Blue Headers */
+        /* Blue Headers - Exact matching of Arvi style */
         .blue-header {
-            background: #1e40af;
+            background: #5a6a7a;
             color: white;
             text-align: center;
-            padding: 2mm;
-            font-weight: 700;
+            padding: 3mm;
+            font-weight: 600;
             font-size: 11pt;
-            margin: 4mm 0 3mm;
-            text-transform: uppercase;
-        }
-
-        /* Red Accent */
-        .red {
-            color: #dc2626;
+            margin: 6mm 0 4mm;
         }
 
         .red-bold {
-            color: #dc2626;
+            color: #c41e3a;
             font-weight: 700;
         }
 
         /* Reference Box */
         .ref-box {
-            margin: 4mm 0;
+            margin: 5mm 0;
             font-size: 10pt;
         }
 
         .ref-box p {
-            margin: 1mm 0;
+            margin: 1.5mm 0;
         }
 
-        .rich-text p { margin-bottom: 1mm; }
-        .rich-text ul, .rich-text ol { padding-left: 5mm; margin-bottom: 2mm; }
-        .rich-text li { margin-bottom: 0.5mm; }
+        .rich-text p { margin-bottom: 1.5mm; }
+        .rich-text ul, .rich-text ol { padding-left: 6mm; margin-bottom: 3mm; }
+        .rich-text li { margin-bottom: 1mm; }
 
         /* Section Title */
         .section-title {
             font-size: 11pt;
-            font-weight: 700;
-            margin: 4mm 0 2mm;
-            color: #1e40af;
+            font-weight: 600;
+            margin: 5mm 0 3mm;
         }
 
-        /* Content Block */
+        /* Content Block mirroring the PDF layout */
         .content-block {
             display: flex;
-            gap: 5mm;
-            margin: 3mm 0;
+            gap: 8mm;
+            margin: 5mm 0;
         }
 
         .img-stack {
-            flex: 0 0 45mm;
+            flex: 0 0 40mm;
             display: flex;
             flex-direction: column;
-            gap: 2mm;
+            gap: 3mm;
         }
 
         .img-stack img {
             width: 100%;
-            border: 0.5pt solid #ccc;
+            border: 1px solid #ddd;
         }
 
         .text-content {
@@ -131,173 +115,213 @@
             text-align: justify;
         }
 
-        /* Tables */
+        /* Tables matching the PDF exactly */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 4mm 0;
+            margin: 6mm 0;
         }
 
         th, td {
-            border: 0.5pt solid #666;
-            padding: 1.5mm 2mm;
+            border: 1px solid #999;
+            padding: 2.5mm 3mm;
             font-size: 9.5pt;
         }
 
         th {
-            background: #f1f5f9;
-            font-weight: 700;
+            background: #e8e8e8;
+            font-weight: 600;
             text-align: center;
         }
 
-        /* Totals */
-        .total-box {
-            margin-top: 4mm;
+        .terms-table td:first-child {
+            width: 35mm;
+            font-weight: 600;
+            background: #f5f5f5;
+        }
+
+        /* Totals Block */
+        .total-container {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
+            margin-top: 5mm;
         }
 
         .total-row {
             display: flex;
-            width: 60mm;
+            width: 70mm;
             justify-content: space-between;
-            padding: 1mm 0;
-            border-bottom: 0.5pt solid #eee;
+            padding: 1.5mm 0;
+            border-bottom: 1px solid #eee;
         }
 
-        .grand-total {
-            background: #dc2626;
+        .grand-total-row {
+            background: #c41e3a;
             color: white;
-            padding: 2mm;
-            border-radius: 1mm;
-            margin-top: 1mm;
+            padding: 3mm;
+            width: 70mm;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2mm;
             font-weight: 700;
+            border-radius: 1mm;
         }
 
-        @media print {
-            .container { padding: 0; }
-            .blue-header { -webkit-print-color-adjust: exact; background-color: #1e40af !important; }
-            .grand-total { -webkit-print-color-adjust: exact; background-color: #dc2626 !important; }
+        /* Signature */
+        .signature-area {
+            margin-top: 12mm;
+            margin-bottom: 15mm;
+        }
+
+        /* Footer - FIXED AT BOTTOM OF LAST PAGE */
+        .footer {
+            width: 100%;
+            padding-bottom: 10mm;
+            margin-top: auto; /* Pushes to bottom of flex container */
+            text-align: center;
+        }
+
+        .footer-img {
+            width: 100%;
+            max-width: 185mm;
+            height: auto;
+        }
+
+        /* Page Break Support */
+        .page-break {
+            page-break-before: always;
+        }
+
+        @media screen {
+            body { background: #f0f0f0; padding: 20px; }
+            .doc-wrapper { background: white; width: 210mm; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin: 0 auto; min-height: 297mm; }
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <!-- HEADER -->
-        <div class="header">
-            <% if (assetImages['new_header.jpg']) { %>
-                <img src="<%= assetImages['new_header.jpg'] %>" class="header-img">
-            <% } %>
-        </div>
-
-        <!-- REFERENCE -->
-        <div class="ref-box">
-            <p><strong>Quotation No:</strong> <%= data.quoteNumber %></p>
-            <p><strong>Date:</strong> <%= data.quoteDate %></p>
-            
-            <div style="margin-top: 2mm;" class="rich-text">
-                <span style="font-weight: bold;">To:</span><br>
-                <%- data.customerName %>
-                <%- data.customerAddress %>
-            </div>
-
-            <div style="margin-top: 2mm;" class="rich-text">
-                <span style="font-weight: bold;">Kind Attn:</span><br>
-                <%- data.kindAttn %>
-            </div>
-
-            <div style="margin-top: 2mm;" class="rich-text">
-                <span style="font-weight: bold;">Ref:</span><br>
-                <%- data.customerRef %>
-            </div>
-            
-            <div style="margin-top: 3mm;" class="rich-text">
-                <%- data.referenceText %>
-            </div>
-        </div>
-
-        <div class="blue-header">What sets Arvi apart from the rest? Let's take a closer look.</div>
-
-        <div class="section-title">1. Truly Indian with <span class="red-bold">75 - 80% local content/ Indian components</span></div>
-
-        <div class="content-block">
-            <div class="img-stack">
-                <% if (assetImages['IMG-20260205-WA0004.jpg']) { %>
-                    <img src="<%= assetImages['IMG-20260205-WA0004.jpg'] %>">
-                <% } %>
-                <% if (assetImages['IMG-20260205-WA0010.jpg']) { %>
-                    <img src="<%= assetImages['IMG-20260205-WA0010.jpg'] %>">
+    <div class="doc-wrapper">
+        <div class="content-area">
+            <!-- HEADER -->
+            <div class="header">
+                <% if (assetImages['new_header.jpg']) { %>
+                    <img src="<%= assetImages['new_header.jpg'] %>" class="header-img">
                 <% } %>
             </div>
-            <div class="text-content">
-                <p>At a time when self-reliance is driving India’s industrial backbone, Arvi stands out with a 75 – 80% locally designed and manufactured product line. This indigenous approach not only ensures robust quality but also strengthens India’s vision of <strong>“ Make in India.”</strong></p>
-                <p>Many so called manufacturers import UPS as semi knocked down kits and reassemble it in India under Make in India initiative.</p>
-                <p><em>"Every Arvi UPS is carefully engineered and subjected to 12 rigorous stages of quality inspection and heatrun; ensures minimum 10years of product life."</em></p>
+
+            <!-- REFERENCE DATA -->
+            <div class="ref-box">
+                <p><strong>Quotation No:</strong> <%= data.quoteNumber %></p>
+                <p><strong>Date:</strong> <%= data.quoteDate %></p>
+                
+                <div style="margin-top: 3mm;" class="rich-text">
+                    <span style="font-weight: 600;">To:</span><br>
+                    <%- data.customerName %><br>
+                    <%- data.customerAddress %>
+                </div>
+
+                <div style="margin-top: 3mm;" class="rich-text">
+                    <span style="font-weight: 600;">Kind Attn:</span><br>
+                    <%- data.kindAttn %>
+                </div>
+
+                <div style="margin-top: 3mm;" class="rich-text">
+                    <span style="font-weight: 600;">Ref:</span><br>
+                    <%- data.customerRef %>
+                </div>
+                
+                <div style="margin-top: 4mm;" class="rich-text">
+                    <%- data.referenceText %>
+                </div>
+            </div>
+
+            <!-- BRANDING SECTION 1 -->
+            <div class="blue-header">What sets Arvi apart from the rest? Let's take a closer look.</div>
+
+            <div class="section-title">1. Truly Indian with <span class="red-bold">75 - 80% local content/ Indian components</span></div>
+
+            <div class="content-block">
+                <div class="img-stack">
+                    <% if (assetImages['IMG-20260205-WA0004.jpg']) { %>
+                        <img src="<%= assetImages['IMG-20260205-WA0004.jpg'] %>">
+                    <% } %>
+                    <% if (assetImages['IMG-20260205-WA0010.jpg']) { %>
+                        <img src="<%= assetImages['IMG-20260205-WA0010.jpg'] %>">
+                    <% } %>
+                </div>
+                <div class="text-content">
+                    <p>At a time when self-reliance is driving India’s industrial backbone, Arvi stands out with a 75 – 80% locally designed and manufactured product line. This indigenous approach not only ensures robust quality but also strengthens India’s vision of <strong>“ Make in India.”</strong></p>
+                    <p>Many so called manufacturers import UPS as semi knocked down kits and reassemble it in India under Make in India initiative; but the UPS design and its sub assembly are not Indian.</p>
+                    <p><em>"Every Arvi UPS is carefully engineered and subjected to 12 rigorous stages of quality inspection and heatrun; ensures minimum 10years of product life."</em></p>
+                </div>
+            </div>
+
+            <!-- QUOTATION TABLE -->
+            <div class="blue-header">Quotation Details</div>
+
+            <div class="section-title">Option I - <span class="rich-text"><%- data.optionTitle %></span></div>
+            <div style="font-size: 10pt;" class="rich-text"><%- data.optionSubtitle %></div>
+            <div style="margin-top: 2mm; margin-bottom: 2mm;" class="rich-text"><%- data.optionDetails %></div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 12mm;">Sl No</th>
+                        <th>Description</th>
+                        <th style="width: 28mm;">Unit Price</th>
+                        <th style="width: 18mm;">Qty</th>
+                        <th style="width: 32mm;">Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% data.items.forEach(function(item) { %>
+                    <tr>
+                        <td style="text-align: center;"><%= item.slno %></td>
+                        <td class="rich-text"><%- item.description %></td>
+                        <td style="text-align: right;"><%= item.unitPrice %></td>
+                        <td style="text-align: center;"><%= item.qty %></td>
+                        <td style="text-align: right;"><%= item.value %></td>
+                    </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+
+            <!-- TOTALS -->
+            <div class="total-container">
+                <div class="total-row"><span>Subtotal:</span> <span>₹ <%= data.subtotal.toLocaleString('en-IN') %></span></div>
+                <div class="total-row"><span>GST (18%):</span> <span>₹ <%= data.gstAmount.toLocaleString('en-IN') %></span></div>
+                <div class="grand-total-row"><span>Grand Total:</span> <span>₹ <%= data.grandTotal.toLocaleString('en-IN') %></span></div>
+            </div>
+
+            <!-- TERMS -->
+            <div class="blue-header">Terms & Conditions</div>
+            <table class="terms-table" style="margin-top: 0;">
+                <tr><td>Price</td><td class="rich-text"><%- data.priceLocation %></td></tr>
+                <tr><td>GST</td><td class="rich-text"><%- data.gstTerms %></td></tr>
+                <tr><td>Delivery</td><td class="rich-text"><%- data.delivery %></td></tr>
+                <tr><td>Payment</td><td class="rich-text"><%- data.payment %></td></tr>
+                <tr><td>FAT</td><td class="rich-text"><%- data.fat %></td></tr>
+                <tr><td>Warranty</td><td class="rich-text"><%- data.warranty %></td></tr>
+                <tr><td>Validity</td><td class="rich-text"><%- data.validity %></td></tr>
+                <tr><td>Updates</td><td class="rich-text"><%- data.updates %></td></tr>
+            </table>
+
+            <!-- SIGNATURE -->
+            <div class="signature-area rich-text">
+                <p>Please visit us at www.arviups.com</p>
+                <p>Thanking you and assuring you of our best services.</p>
+                <p style="margin-top: 6mm;">warm regards,</p>
+                <div style="margin-top: 2mm;">
+                    <%- data.signName %>
+                    <%- data.signDesig %>
+                </div>
+                <p>For Arvi Systems & Controls Pvt Ltd</p>
             </div>
         </div>
 
-        <div class="blue-header">Quotation Details</div>
-
-        <div class="section-title">Option I - <span class="rich-text"><%- data.optionTitle %></span></div>
-        <div style="font-size: 10pt;" class="rich-text"><%- data.optionSubtitle %></div>
-        <div style="margin-top: 2mm; margin-bottom: 3mm;" class="rich-text"><%- data.optionDetails %></div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th style="width: 10mm;">Sl No</th>
-                    <th>Description</th>
-                    <th style="width: 25mm;">Unit Price</th>
-                    <th style="width: 15mm;">Qty</th>
-                    <th style="width: 30mm;">Value</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% data.items.forEach(function(item) { %>
-                <tr>
-                    <td style="text-align: center;"><%= item.slno %></td>
-                    <td class="rich-text"><%- item.description %></td>
-                    <td style="text-align: right;"><%= item.unitPrice %></td>
-                    <td style="text-align: center;"><%= item.qty %></td>
-                    <td style="text-align: right;"><%= item.value %></td>
-                </tr>
-                <% }); %>
-            </tbody>
-        </table>
-
-        <div class="total-box">
-            <div class="total-row"><span>Subtotal:</span> <span>₹ <%= data.subtotal.toLocaleString('en-IN') %></span></div>
-            <div class="total-row"><span>GST (18%):</span> <span>₹ <%= data.gstAmount.toLocaleString('en-IN') %></span></div>
-            <div class="total-row grand-total"><span>Grand Total:</span> <span>₹ <%= data.grandTotal.toLocaleString('en-IN') %></span></div>
-        </div>
-
-        <div class="blue-header">Terms & Conditions</div>
-        <table style="margin-top: 0;">
-            <tr><td style="width: 30mm; font-weight: bold;">Price</td><td class="rich-text"><%- data.priceLocation %></td></tr>
-            <tr><td style="font-weight: bold;">GST</td><td class="rich-text"><%- data.gstTerms %></td></tr>
-            <tr><td style="font-weight: bold;">Delivery</td><td class="rich-text"><%- data.delivery %></td></tr>
-            <tr><td style="font-weight: bold;">Payment</td><td class="rich-text"><%- data.payment %></td></tr>
-            <tr><td style="font-weight: bold;">FAT</td><td class="rich-text"><%- data.fat %></td></tr>
-            <tr><td style="font-weight: bold;">Warranty</td><td class="rich-text"><%- data.warranty %></td></tr>
-            <tr><td style="font-weight: bold;">Validity</td><td class="rich-text"><%- data.validity %></td></tr>
-            <tr><td style="font-weight: bold;">Updates</td><td class="rich-text"><%- data.updates %></td></tr>
-        </table>
-
-        <div style="margin-top: 5mm;" class="rich-text">
-            <p>Please visit us at www.arviups.com</p>
-            <p>Thanking you and assuring you of our best services.</p>
-            <p style="margin-top: 5mm;">warm regards,</p>
-            <div style="margin-top: 2mm;">
-                <%- data.signName %>
-                <%- data.signDesig %>
-            </div>
-            <p>For Arvi Systems & Controls Pvt Ltd</p>
-        </div>
-
-        <!-- FOOTER -->
-        <div class="page-footer">
+        <!-- FOOTER: FORCED TO BOTTOM OF LAST PAGE -->
+        <div class="footer">
             <% if (assetImages['new_footer.jpg']) { %>
                 <img src="<%= assetImages['new_footer.jpg'] %>" class="footer-img">
             <% } %>
