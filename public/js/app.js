@@ -1,190 +1,182 @@
 // ARVI Quotation Generator - App JavaScript
-let quillInstances = {};
-
-const toolbarOptions = [
-    ['bold', 'italic', 'underline', 'strike'],
-    [{ 'color': [] }, { 'background': [] }],
-    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-    [{ 'align': [] }],
-    ['clean']
-];
-
 document.addEventListener('DOMContentLoaded', function () {
-    initializeStaticEditors();
     initializeForm();
     setupEventListeners();
-    addItem(); // Initial item
 });
 
-function createEditor(selector, placeholder = '') {
-    const quill = new Quill(selector, {
-        theme: 'snow',
-        placeholder: placeholder,
-        modules: { toolbar: toolbarOptions }
-    });
-    quillInstances[selector] = quill;
-    return quill;
-}
-
-function initializeStaticEditors() {
-    createEditor('#customerNameEditor', 'Customer Name...');
-    createEditor('#customerAddressEditor', 'Address...');
-    createEditor('#kindAttnEditor', 'Kind Attention...');
-    createEditor('#customerRefEditor', 'Customer Reference...');
-    createEditor('#referenceTextEditor', 'Main Reference Details...');
-    createEditor('#optionTitleEditor', 'Option Title...');
-    createEditor('#optionSubtitleEditor', 'Option Subtitle...');
-    createEditor('#optionDetailsEditor', 'Technical Details...');
-    createEditor('#priceLocationEditor', 'Price Terms...');
-    createEditor('#gstTermsEditor', 'GST Terms...');
-    createEditor('#deliveryEditor', 'Delivery Terms...');
-    createEditor('#paymentEditor', 'Payment Terms...');
-    createEditor('#fatEditor', 'FAT Terms...');
-    createEditor('#warrantyEditor', 'Warranty Terms...');
-    createEditor('#validityEditor', 'Validity Terms...');
-    createEditor('#updatesEditor', 'Update Terms...');
-    createEditor('#signNameEditor', 'Signatory Name...');
-    createEditor('#signDesigEditor', 'Designation...');
-
-    // Set Defaults
-    quillInstances['#referenceTextEditor'].clipboard.dangerouslyPasteHTML('<p>Dear Sir/Madam,</p><p><br></p><p>With reference to your enquiry, we are pleased to submit our quotation:</p>');
-    quillInstances['#optionTitleEditor'].clipboard.dangerouslyPasteHTML('<p><strong>PFC-XR 303</strong></p>');
-    quillInstances['#optionSubtitleEditor'].clipboard.dangerouslyPasteHTML('<p>Online UPS - specially designed for laser cutting machines.</p>');
-    quillInstances['#optionDetailsEditor'].clipboard.dangerouslyPasteHTML('<p>VFI power-conditioning topology with galvanic isolation for comprehensive power protection.</p>');
-    quillInstances['#priceLocationEditor'].clipboard.dangerouslyPasteHTML('<p>For Bangalore.</p>');
-    quillInstances['#gstTermsEditor'].clipboard.dangerouslyPasteHTML('<p>18% extra on UPS, batteries and battery stand.</p>');
-    quillInstances['#deliveryEditor'].clipboard.dangerouslyPasteHTML('<p>Ex-works, within 2-3 weeks from receipt of confirmed order.</p>');
-    quillInstances['#paymentEditor'].clipboard.dangerouslyPasteHTML('<p>50% advance along with order, balance before dispatch.</p>');
-    quillInstances['#fatEditor'].clipboard.dangerouslyPasteHTML('<p>Factory Acceptance Test (FAT) - We can arrange for a in-person / video online factory acceptance test of the UPS before despatch.</p>');
-    quillInstances['#warrantyEditor'].clipboard.dangerouslyPasteHTML('<p>2 years comprehensive warranty on UPS from date of installation.</p>');
-    quillInstances['#validityEditor'].clipboard.dangerouslyPasteHTML('<p>30 days</p>');
-    quillInstances['#updatesEditor'].clipboard.dangerouslyPasteHTML('<p>You will be updated regularly about the status of progress in production.</p>');
-    quillInstances['#signNameEditor'].clipboard.dangerouslyPasteHTML('<p><strong>Santosh Risbood</strong></p>');
-    quillInstances['#signDesigEditor'].clipboard.dangerouslyPasteHTML('<p>General Manager - OEM Business</p>');
-}
+let itemIndex = 3; // Start from 3 since we have 3 initial rows
 
 function initializeForm() {
+    // Set default date
     const today = new Date();
     document.getElementById('quoteDate').valueAsDate = today;
+
+    // Generate quote number
     const year = today.getFullYear();
     const randomNum = String(Math.floor(Math.random() * 999) + 1).padStart(3, '0');
     document.getElementById('quoteNumber').value = `ARVI/${year}/${randomNum}`;
 }
 
-let itemCounter = 0;
+function setupEventListeners() {
+    // Preview button
+    document.getElementById('previewBtn').addEventListener('click', showPreview);
+
+    // Generate PDF button
+    document.getElementById('generateBtn').addEventListener('click', generatePDF);
+
+    // Add item button
+    document.getElementById('addItemBtn').addEventListener('click', addItem);
+
+    // Close modal on click outside
+    document.getElementById('previewModal').addEventListener('click', function (e) {
+        if (e.target === this) closePreview();
+    });
+}
+
 function addItem() {
     const tbody = document.getElementById('itemsTableBody');
     const row = document.createElement('tr');
-    const descId = `item-desc-${itemCounter}`;
-    
+    row.className = 'item-row';
+    row.dataset.index = itemIndex;
+
     row.innerHTML = `
-        <td><input type="text" class="slno-input" value="${itemCounter + 1}" style="width: 40px;"></td>
-        <td><div id="${descId}" style="height: 80px; background: white;"></div></td>
-        <td><input type="number" class="price-input" value="0"></td>
-        <td><input type="number" class="qty-input" value="1"></td>
-        <td><input type="text" class="value-input" readonly value="0.00"></td>
-        <td><button type="button" class="btn-remove" onclick="this.closest('tr').remove(); calculateTotal();">✕</button></td>
+        <td><input type="text" name="items[${itemIndex}][slno]" value="${itemIndex + 1}" class="input-small"></td>
+        <td><textarea name="items[${itemIndex}][description]" rows="2" placeholder="Description..."></textarea></td>
+        <td><input type="number" name="items[${itemIndex}][unitPrice]" class="price-input" placeholder="0" onchange="calculateItemValue(${itemIndex}); calculateTotal();"></td>
+        <td><input type="number" name="items[${itemIndex}][qty]" value="1" min="1" class="qty-input" onchange="calculateItemValue(${itemIndex}); calculateTotal();"></td>
+        <td><input type="text" name="items[${itemIndex}][value]" readonly class="value-input"></td>
+        <td><button type="button" class="btn-remove" onclick="removeItem(${itemIndex}); calculateTotal();">✕</button></td>
     `;
+
     tbody.appendChild(row);
-    
-    const quill = new Quill(`#${descId}`, {
-        theme: 'snow',
-        modules: { toolbar: [['bold', 'italic', { 'color': [] }, 'clean']] }
-    });
-    quillInstances[`#${descId}`] = quill;
-    itemCounter++;
+    itemIndex++;
 }
 
-function setupEventListeners() {
-    document.getElementById('previewBtn').addEventListener('click', showPreview);
-    document.getElementById('generateBtn').addEventListener('click', generatePDF);
-    document.getElementById('addItemBtn').addEventListener('click', addItem);
-    
-    document.getElementById('quotationForm').addEventListener('input', function(e) {
-        if (e.target.classList.contains('price-input') || e.target.classList.contains('qty-input')) {
-            calculateTotal();
-        }
-    });
+function removeItem(index) {
+    const row = document.querySelector(`.item-row[data-index="${index}"]`);
+    if (row) {
+        row.remove();
+        calculateTotal();
+    }
+}
+
+function calculateItemValue(index) {
+    const row = document.querySelector(`.item-row[data-index="${index}"]`);
+    if (!row) return;
+
+    const price = parseFloat(row.querySelector('.price-input').value) || 0;
+    const qty = parseInt(row.querySelector('.qty-input').value) || 1;
+    const value = price * qty;
+
+    row.querySelector('.value-input').value = formatIndianNumber(value);
 }
 
 function calculateTotal() {
     let subtotal = 0;
-    document.querySelectorAll('#itemsTableBody tr').forEach(row => {
-        const price = parseFloat(row.querySelector('.price-input').value) || 0;
-        const qty = parseFloat(row.querySelector('.qty-input').value) || 0;
-        const value = price * qty;
-        row.querySelector('.value-input').value = value.toLocaleString('en-IN', { minimumFractionDigits: 2 });
-        subtotal += value;
+
+    // Sum all item values
+    document.querySelectorAll('#itemsTableBody .item-row').forEach(row => {
+        const price = parseFloat(row.querySelector('.price-input')?.value) || 0;
+        const qty = parseInt(row.querySelector('.qty-input')?.value) || 1;
+        subtotal += price * qty;
     });
 
-    const gst = subtotal * 0.18;
-    const grand = subtotal + gst;
+    // Calculate GST (18%) and Grand Total
+    const gstAmount = subtotal * 0.18;
+    const grandTotal = subtotal + gstAmount;
 
-    document.getElementById('subtotalDisplay').textContent = '₹ ' + subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2 });
-    document.getElementById('gstDisplay').textContent = '₹ ' + gst.toLocaleString('en-IN', { minimumFractionDigits: 2 });
-    document.getElementById('grandTotalDisplay').textContent = '₹ ' + grand.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+    // Update display
+    document.getElementById('subtotalDisplay').textContent = '₹ ' + formatIndianNumber(subtotal);
+    document.getElementById('gstDisplay').textContent = '₹ ' + formatIndianNumber(gstAmount);
+    document.getElementById('grandTotalDisplay').textContent = '₹ ' + formatIndianNumber(grandTotal);
 
+    // Update hidden fields
     document.getElementById('subtotal').value = subtotal;
-    document.getElementById('gstAmount').value = gst;
-    document.getElementById('grandTotal').value = grand;
+    document.getElementById('gstAmount').value = gstAmount;
+    document.getElementById('grandTotal').value = grandTotal;
 }
 
-function syncAllRichText() {
-    document.getElementById('customerName').value = quillInstances['#customerNameEditor'].root.innerHTML;
-    document.getElementById('customerAddress').value = quillInstances['#customerAddressEditor'].root.innerHTML;
-    document.getElementById('kindAttn').value = quillInstances['#kindAttnEditor'].root.innerHTML;
-    document.getElementById('customerRef').value = quillInstances['#customerRefEditor'].root.innerHTML;
-    document.getElementById('referenceText').value = quillInstances['#referenceTextEditor'].root.innerHTML;
-    document.getElementById('optionTitle').value = quillInstances['#optionTitleEditor'].root.innerHTML;
-    document.getElementById('optionSubtitle').value = quillInstances['#optionSubtitleEditor'].root.innerHTML;
-    document.getElementById('optionDetails').value = quillInstances['#optionDetailsEditor'].root.innerHTML;
-    document.getElementById('priceLocation').value = quillInstances['#priceLocationEditor'].root.innerHTML;
-    document.getElementById('gstTerms').value = quillInstances['#gstTermsEditor'].root.innerHTML;
-    document.getElementById('delivery').value = quillInstances['#deliveryEditor'].root.innerHTML;
-    document.getElementById('payment').value = quillInstances['#paymentEditor'].root.innerHTML;
-    document.getElementById('fat').value = quillInstances['#fatEditor'].root.innerHTML;
-    document.getElementById('warranty').value = quillInstances['#warrantyEditor'].root.innerHTML;
-    document.getElementById('validity').value = quillInstances['#validityEditor'].root.innerHTML;
-    document.getElementById('updates').value = quillInstances['#updatesEditor'].root.innerHTML;
-    document.getElementById('signName').value = quillInstances['#signNameEditor'].root.innerHTML;
-    document.getElementById('signDesig').value = quillInstances['#signDesigEditor'].root.innerHTML;
+function formatIndianNumber(num) {
+    if (!num || num === 0) return '0.00';
+    return num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function toggleSection(header) {
+    const section = header.closest('.collapsible');
+    section.classList.toggle('open');
 }
 
 function getFormData() {
-    syncAllRichText();
     const form = document.getElementById('quotationForm');
     const formData = new FormData(form);
     const data = {};
 
+    // Get simple fields
     for (const [key, value] of formData.entries()) {
-        data[key] = value;
+        if (!key.startsWith('items[') && !key.startsWith('option2Items[')) {
+            data[key] = value;
+        }
     }
 
+    // Get items
     data.items = [];
-    document.querySelectorAll('#itemsTableBody tr').forEach(row => {
-        const descId = row.querySelector('div[id^="item-desc"]').id;
-        data.items.push({
-            slno: row.querySelector('.slno-input').value,
-            description: quillInstances[`#${descId}`].root.innerHTML,
-            unitPrice: parseFloat(row.querySelector('.price-input').value) || 0,
-            qty: parseFloat(row.querySelector('.qty-input').value) || 0,
-            value: (parseFloat(row.querySelector('.price-input').value) || 0) * (parseFloat(row.querySelector('.qty-input').value) || 0)
-        });
+    document.querySelectorAll('#itemsTableBody .item-row').forEach(row => {
+        const slno = row.querySelector('input[name*="[slno]"]')?.value || '';
+        const description = row.querySelector('textarea[name*="[description]"]')?.value || '';
+        const unitPrice = row.querySelector('.price-input')?.value || '';
+        const qty = row.querySelector('.qty-input')?.value || '1';
+        const value = row.querySelector('.value-input')?.value || '';
+
+        if (slno || description) {
+            data.items.push({ slno, description, unitPrice, qty, value });
+        }
     });
+
+    // Get option 2 items
+    data.option2Items = [];
+    document.querySelectorAll('#option2TableBody tr').forEach(row => {
+        const slno = row.querySelector('input[name*="[slno]"]')?.value || '';
+        const description = row.querySelector('textarea[name*="[description]"]')?.value || '';
+        const unitPrice = row.querySelector('.price-input')?.value || '';
+        const qty = row.querySelector('.qty-input')?.value || '1';
+        const value = row.querySelector('.value-input')?.value || '';
+
+        if (slno || description) {
+            data.option2Items.push({ slno, description, unitPrice, qty, value });
+        }
+    });
+
+    // Get totals
+    data.subtotal = parseFloat(document.getElementById('subtotal').value) || 0;
+    data.gstAmount = parseFloat(document.getElementById('gstAmount').value) || 0;
+    data.grandTotal = parseFloat(document.getElementById('grandTotal').value) || 0;
 
     return data;
 }
 
 async function showPreview() {
     const data = getFormData();
-    const response = await fetch('/api/preview', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-    });
-    const html = await response.text();
-    document.getElementById('previewFrame').srcdoc = html;
-    document.getElementById('previewModal').classList.add('active');
+
+    try {
+        const response = await fetch('/api/preview', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        const html = await response.text();
+        const frame = document.getElementById('previewFrame');
+        frame.srcdoc = html;
+
+        document.getElementById('previewModal').classList.add('active');
+    } catch (error) {
+        console.error('Preview error:', error);
+        alert('Error generating preview');
+    }
+}
+
+function closePreview() {
+    document.getElementById('previewModal').classList.remove('active');
 }
 
 async function generatePDF() {
@@ -198,17 +190,30 @@ async function generatePDF() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.details || 'Failed to generate PDF');
+        }
+
+        // Handle PDF download
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
+        a.style.display = 'none';
         a.href = url;
-        a.download = `ARVI_Quotation_${data.quoteNumber}.pdf`;
+        a.download = `ARVI_Quotation_${data.quoteNumber || 'Q001'}.pdf`;
+        document.body.appendChild(a);
         a.click();
+
+        // Cleanup
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+
+    } catch (error) {
+        console.error('PDF generation error:', error);
+        alert(`Error generating PDF: ${error.message}`);
     } finally {
         loading.classList.remove('active');
     }
-}
-
-function closePreview() {
-    document.getElementById('previewModal').classList.remove('active');
 }

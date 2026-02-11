@@ -12,18 +12,6 @@
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <style>
-        .rich-text-container {
-            margin-bottom: 10px;
-        }
-        .rich-text-editor {
-            background: white;
-        }
-        /* Style for item description editors to look consistent in the table */
-        .item-description-editor {
-            height: 100px;
-        }
-    </style>
 </head>
 
 <body>
@@ -222,12 +210,12 @@
                     <div class="form-grid cols-2">
                         <div class="form-group">
                             <label for="signName">Name (Rich Text)</label>
-                            <div id="signNameEditor" class="rich-text-editor" style="height: 60px;"></div>
+                            <div id="signNameEditor" class="rich-text-editor" style="height: 80px;"></div>
                             <input type="hidden" id="signName" name="signName">
                         </div>
                         <div class="form-group">
                             <label for="signDesig">Designation (Rich Text)</label>
-                            <div id="signDesigEditor" class="rich-text-editor" style="height: 60px;"></div>
+                            <div id="signDesigEditor" class="rich-text-editor" style="height: 80px;"></div>
                             <input type="hidden" id="signDesig" name="signDesig">
                         </div>
                     </div>
