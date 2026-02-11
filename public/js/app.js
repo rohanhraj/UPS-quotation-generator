@@ -146,6 +146,9 @@ function getFormData() {
         }
     });
 
+    // Capture referenceText explicitly from the form field
+    data.referenceText = document.getElementById('referenceText').value;
+
     // Get totals
     data.subtotal = parseFloat(document.getElementById('subtotal').value) || 0;
     data.gstAmount = parseFloat(document.getElementById('gstAmount').value) || 0;

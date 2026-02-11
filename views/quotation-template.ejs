@@ -608,6 +608,9 @@
                     <%= data.kindAttn %>
                 </p>
                 <% } %>
+            <% if (data.referenceText) { %>
+                <div style="margin-top: 8px; white-space: pre-wrap; font-size: 11px;"><%- data.referenceText.replace(/\n/g, '<br>') %></div>
+            <% } %>
         </div>
 
         <!-- SECTION 1: What sets ARVI apart -->
