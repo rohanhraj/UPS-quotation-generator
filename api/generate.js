@@ -1,3 +1,8 @@
+// Set AWS Lambda runtime as Node 20 so Sparticuz knows to unpack AL2023 shared libraries (libnss3.so)
+if (process.env.VERCEL) {
+    process.env.AWS_LAMBDA_JS_RUNTIME = 'nodejs20.x';
+}
+
 const chromium = require('@sparticuz/chromium-min');
 const puppeteer = require('puppeteer-core');
 const ejs = require('ejs');
