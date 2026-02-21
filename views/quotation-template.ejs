@@ -15,71 +15,25 @@
 
         body {
             font-family: 'Open Sans', Arial, sans-serif;
-            font-size: 11px;
-            line-height: 1.4;
+            font-size: 9px;
+            line-height: 1.3;
             color: #333;
             background: white;
         }
 
         .container {
-            max-width: 210mm;
-            width: 100%;
+            max-width: 190mm;
             margin: 0 auto;
-            padding: 10mm;
+            padding: 8mm;
         }
 
-        /* Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 6px;
-            border-bottom: 1px solid #ddd;
+        /* Header & Footer Images */
+        .header-image {
             margin-bottom: 8px;
         }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .year-badge {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #c9a961 0%, #b8956a 100%);
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-
-        .year-badge .num {
-            font-size: 16px;
-            font-weight: 700;
-            line-height: 1;
-        }
-
-        .year-badge .text {
-            font-size: 4px;
-            text-align: center;
-        }
-
-        .header-info {
-            font-size: 9px;
-            color: #666;
-            max-width: 250px;
-        }
-
-        .header-info .iso {
-            font-weight: 600;
-            font-size: 8px;
-        }
-
-        .logo-img {
-            height: 35px;
+        .footer-image {
+            margin-top: 10px;
         }
 
         /* Blue Headers */
@@ -89,7 +43,7 @@
             text-align: center;
             padding: 4px 8px;
             font-weight: 600;
-            font-size: 12px;
+            font-size: 10px;
             margin: 8px 0 6px;
         }
 
@@ -109,16 +63,36 @@
             border: 1px solid #e0e0e0;
             padding: 6px 10px;
             margin: 6px 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .ref-box-left {
+            flex: 1;
+        }
+
+        .ref-box-right {
+            flex: 0 0 auto;
+            text-align: right;
+            white-space: nowrap;
         }
 
         .ref-box p {
             margin: 2px 0;
-            font-size: 11px;
+            font-size: 9px;
+        }
+
+        /* Reference Text Content (salutation below ref-box) */
+        .reference-text-content {
+            margin-top: 6px;
+            font-size: 9px;
+            line-height: 1.4;
+            padding: 4px 0;
         }
 
         /* Section Title */
         .section-title {
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 600;
             margin: 8px 0 5px;
         }
@@ -148,9 +122,9 @@
 
         .text-col {
             flex: 1;
-            font-size: 10px;
+            font-size: 8px;
             text-align: justify;
-            line-height: 1.4;
+            line-height: 1.35;
         }
 
         .text-col p {
@@ -163,13 +137,25 @@
 
         /* Bullet List */
         ul.bullets {
-            padding-left: 12px;
+            padding-left: 16px;
             margin: 2px 0;
-            font-size: 10px;
+            font-size: 8px;
+            list-style: none;
         }
 
         ul.bullets li {
             margin-bottom: 1px;
+            position: relative;
+            padding-left: 2px;
+        }
+
+        ul.bullets li::before {
+            content: '▶';
+            position: absolute;
+            left: -14px;
+            color: #333;
+            font-size: 6px;
+            top: 1px;
         }
 
         /* Image Row */
@@ -211,7 +197,7 @@
             width: 100%;
             border-collapse: collapse;
             margin: 6px 0;
-            font-size: 10px;
+            font-size: 8px;
         }
 
         .data-table th,
@@ -238,7 +224,7 @@
             width: 100%;
             border-collapse: collapse;
             margin: 6px 0;
-            font-size: 10px;
+            font-size: 8px;
         }
 
         .quote-table th,
@@ -275,7 +261,7 @@
             text-align: center;
             padding: 4px;
             font-weight: 600;
-            font-size: 12px;
+            font-size: 10px;
             margin: 10px 0 5px;
         }
 
@@ -287,11 +273,11 @@
         .option-title .model {
             color: #c41e3a;
             font-weight: 700;
-            font-size: 12px;
+            font-size: 10px;
         }
 
         .option-title .desc {
-            font-size: 11px;
+            font-size: 9px;
         }
 
         /* Terms Table */
@@ -299,7 +285,7 @@
             width: 100%;
             border-collapse: collapse;
             margin: 6px 0;
-            font-size: 10px;
+            font-size: 8px;
         }
 
         .terms-table th {
@@ -321,45 +307,6 @@
             background: #f5f5f5;
         }
 
-        /* Footer */
-        .footer {
-            margin-top: 15px;
-        }
-
-        .company-footer {
-            background: #d3e4f0;
-            padding: 6px 10px;
-            text-align: center;
-        }
-
-        .company-footer h4 {
-            color: #2c5282;
-            font-size: 12px;
-            margin-bottom: 2px;
-        }
-
-        .company-footer p {
-            font-size: 9px;
-            color: #333;
-        }
-
-        .cert-footer {
-            background: #f8f8f8;
-            padding: 4px 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            border-top: 1px solid #ddd;
-        }
-
-        .cert-footer img {
-            height: 22px;
-        }
-
-        .cert-footer span {
-            font-size: 8px;
-        }
 
         /* Quote Box */
         .quote-box {
@@ -413,7 +360,7 @@
             padding: 6px;
             text-align: center;
             font-weight: 600;
-            font-size: 10px;
+            font-size: 9px;
         }
 
         /* Technical Details Box */
@@ -421,7 +368,7 @@
             background: #f9f9f9;
             padding: 6px 10px;
             margin: 6px 0;
-            font-size: 10px;
+            font-size: 8px;
         }
 
         .tech-box p {
@@ -519,14 +466,7 @@
             }
 
             .container {
-                width: 100%;
-                max-width: none;
-                padding: 0;
-            }
-
-            @page {
-                size: A4;
-                margin: 10mm;
+                padding: 5mm;
             }
         }
     </style>
@@ -535,518 +475,559 @@
 <body>
     <div class="container">
         <!-- HEADER -->
-        <div class="header">
-            <div class="header-left">
-                <div class="year-badge">
-                    <span class="num">27</span>
-                    <span class="text">Years of<br>Excellence</span>
-                </div>
-                <div class="header-info">
-                    <div class="iso">ISO 9001:2015</div>
-                    <div>Rated as the BEST In-House R&D among Indian UPS manufacturers by SD.</div>
-                </div>
-            </div>
-            <% if (typeof isBase64 !=='undefined' && isBase64 && assetImages && assetImages['IMG-20260205-WA0005.jpg'])
-                { %>
-                <img src="<%= assetImages['IMG-20260205-WA0005.jpg'] %>" alt="ARVI Power" class="logo-img">
+        <div class="header-image">
+            <% if (typeof isBase64 !=='undefined' && isBase64 && assetImages && assetImages['new_header.jpg']) { %>
+                <img src="<%= assetImages['new_header.jpg'] %>" alt="ARVI Header" style="width:100%;display:block;">
                 <% } else { %>
-                    <img src="<%= assetsPath %>/IMG-20260205-WA0005.jpg" alt="ARVI Power" class="logo-img">
+                    <img src="<%= assetsPath %>/new_header.jpg" alt="ARVI Header" style="width:100%;display:block;">
                     <% } %>
         </div>
 
         <!-- REFERENCE BOX -->
         <div class="ref-box">
-            <p><strong>Quotation No:</strong>
-                <%= data.quoteNumber || '' %> &nbsp;&nbsp; <strong>Date:</strong>
-                    <%= data.quoteDate || new Date().toISOString().split('T')[0] %>
-            </p>
-            <p><strong>To:</strong>
-                <%= data.customerName || '' %>
-                    <% if (data.customerAddress) { %>, <%= data.customerAddress %>
-                            <% } %>
-            </p>
-            <% if (data.kindAttn) { %>
-                <p><strong>Kind Attn:</strong>
-                    <%= data.kindAttn %>
-                </p>
-                <% } %>
-        </div>
-
-        <!-- SECTION 1: What sets ARVI apart -->
-        <div class="blue-header">What sets Arvi apart from the rest? Let's take a closer look.</div>
-
-        <div class="section-title">1. Truly Indian with <span class="red-bold">75-80% local content/ Indian
-                components</span></div>
-
-        <div class="content-row avoid-break">
-            <div class="img-col">
-                <% if (typeof isBase64 !=='undefined' && isBase64 && assetImages &&
-                    assetImages['IMG-20260205-WA0004.jpg']) { %>
-                    <img src="<%= assetImages['IMG-20260205-WA0004.jpg'] %>" alt="UPS Internal">
-                    <% } else { %>
-                        <img src="<%= assetsPath %>/IMG-20260205-WA0004.jpg" alt="UPS Internal">
-                        <% } %>
-                            <% if (typeof isBase64 !=='undefined' && isBase64 && assetImages &&
-                                assetImages['IMG-20260205-WA0010.jpg']) { %>
-                                <img src="<%= assetImages['IMG-20260205-WA0010.jpg'] %>" alt="UPS Cabinet">
-                                <% } else { %>
-                                    <img src="<%= assetsPath %>/IMG-20260205-WA0010.jpg" alt="UPS Cabinet">
-                                    <% } %>
-            </div>
-            <div class="text-col">
-                <p>At a time when self-reliance is driving India's industrial backbone, Arvi stands out with a
-                    <strong>75-80% locally designed and manufactured product line</strong> - this indigenous approach
-                    not only ensures robust quality but also strengthens India's vision of <strong>"Make in
-                        India"</strong>.
-                </p>
-
-                <p>Many <strong>so called manufacturers import</strong> UPS or semi knocked down kits and assemble it in
-                    India under 'Make in India' initiative. But the UPS design and its sub-assembly are not Indian. They
-                    are designed for generic requirements, and are mass produced and sold as "low selling" and hence the
-                    life of these UPS are typically 5-6 years in the harsh environments of India.</p>
-
-                <p>"Every Arvi UPS is carefully engineered and subjected to 12 rigorous stages of quality inspection and
-                    features an <strong>ensures minimum 10 years of product life</strong> - justifies the return on your
-                    high investment and low lease: cost per year."</p>
-
-                <ul class="bullets">
-                    <li>Indigenous design</li>
-                    <li>Easy to service single DSP card</li>
-                    <li>Rugged, long life design</li>
-                    <li>Prompt & ex-stock delivery</li>
-                    <li>Power Factor Corrected, Parallel redundancy, regenerative load handling</li>
-                    <li>10 years of unconditional spare support</li>
-                    <li>Meets MOEMA norm/automation/interference</li>
-                </ul>
-
-                <p style="font-size: 7px; color: #666;">Esthetically designed - export compliant. Exported to Dubai,
-                    Nigeria, Philippines, Malaysia and Nepal</p>
-            </div>
-        </div>
-
-        <!-- SECTION 2: Objective -->
-        <div class="blue-header">2. We are different in our objective and approach</div>
-
-        <p style="margin: 4px 0; font-size: 8px;"><strong style="border-bottom: 2px solid #c41e3a;">Quality of power
-                matters</strong></p>
-
-        <p style="margin: 4px 0; font-size: 8px; text-align: justify;">We believe that the <strong
-                class="red-bold">quality of power matters significantly</strong> and the primary objective of opting for
-            an UPS should be to protect the high investment made on the equipment and the infrastructure apart from
-            providing backup.</p>
-
-        <p style="margin: 4px 0; font-size: 8px; text-align: justify;">The non-linear loads pollute the quality of UPS
-            power especially during peak-power operation; and this polluted power significantly impacts the life of the
-            connected equipment.</p>
-
-        <p style="margin: 4px 0; font-size: 8px; text-align: justify;">Hence unlike the conventional UPS manufacturers,
-            Arvi's approach is to ensure premium-grade power <strong>even during worst loading condition</strong> -
-            which ensures 100% uptime and optimum product life of the connected equipment.</p>
-
-        <!-- PRINCIPLES -->
-        <div class="blue-header">PRINCIPLES THAT WE LIVE BY</div>
-
-        <div class="principles-box avoid-break">
-            <div class="shield-icon">
-                <div class="shield-placeholder">🛡️</div>
-            </div>
-            <div style="flex: 1; font-size: 8px;">
-                <p style="color: #5a6a7a; font-weight: 600; margin-bottom: 3px;">We are passionate about the opportunity
-                    of adding value to our customers needs.</p>
-                <p style="margin-bottom: 3px;">We are a huge beneficiary of the society and we would like to give back
-                    to the society by using our expertise of 27 years, in-house R&D and indigenous manufacturing
-                    capability, add value to our customer's requirements by providing need-based, innovative, reliable,
-                    power-conditioning products with high quality service support.</p>
-                <p>We are also determined to be passionate about what we do and how it influences our customer
-                    experience - we shall conduct ourselves with highest order of ethical values and commitment.</p>
-            </div>
-        </div>
-
-        <!-- MANUFACTURING FACILITY -->
-        <div class="blue-header">3. State-of-art manufacturing facility with Strong end to end In-house R&D team</div>
-
-        <p style="text-align: center; margin: 4px 0; font-size: 9px;">• Manufacturer and exporter of <span
-                class="red-bold">industrial grade UPS for OEMs</span> since 1998.</p>
-
-        <div class="img-row avoid-break">
-            <% if (typeof isBase64 !=='undefined' && isBase64 && assetImages && assetImages['IMG-20260205-WA0007.jpg'])
-                { %>
-                <img src="<%= assetImages['IMG-20260205-WA0007.jpg'] %>" alt="Manufacturing 1">
-                <% } else { %>
-                    <img src="<%= assetsPath %>/IMG-20260205-WA0007.jpg" alt="Manufacturing 1">
-                    <% } %>
-                        <% if (typeof isBase64 !=='undefined' && isBase64 && assetImages &&
-                            assetImages['IMG-20260205-WA0008.jpg']) { %>
-                            <img src="<%= assetImages['IMG-20260205-WA0008.jpg'] %>" alt="Manufacturing 2">
-                            <% } else { %>
-                                <img src="<%= assetsPath %>/IMG-20260205-WA0008.jpg" alt="Manufacturing 2">
-                                <% } %>
-                                    <% if (typeof isBase64 !=='undefined' && isBase64 && assetImages &&
-                                        assetImages['IMG-20260205-WA0006.jpg']) { %>
-                                        <img src="<%= assetImages['IMG-20260205-WA0006.jpg'] %>" alt="Manufacturing 3">
-                                        <% } else { %>
-                                            <img src="<%= assetsPath %>/IMG-20260205-WA0006.jpg" alt="Manufacturing 3">
-                                            <% } %>
-        </div>
-
-        <p style="text-align: center; margin: 6px 0; font-size: 8px;">• Awarded as the best in-house R&D among Indian
-            UPS manufacturers by SoftDisk</p>
-
-        <div class="stats-row avoid-break">
-            <div class="stat">
-                <div class="number">27</div>
-                <div class="label"><span class="red">years</span> of industry expertise</div>
-            </div>
-            <div class="stat">
-                <div class="number">1,26,000+</div>
-                <div class="label"><span class="red">successful</span> installations</div>
-            </div>
-        </div>
-
-        <!-- TECHNICAL EXPERT INSIGHT -->
-        <div class="blue-header">Our technical expert's insight</div>
-
-        <div class="quote-box avoid-break">
-            <p>"We understand that the cost of downtime and premature failure of the connected equipment is very costly
-                as the investment done on the same is very high. Arvi UPS primarily serves as a <span
-                    class="red-bold">virtual insurance to your high cost investment</span>; serving as a high insurance
-                to downtime (daily power issues apart from being a UPS)"</p>
-            <p>"Based on a field study conducted by our engineering team we have found that the quality of the UPS power
-                determines the anticipated product life and the product life of the connected equipment."</p>
-            <p>"Equipment availability (which ensures tip of functioning) is directly linked to the quality of the UPS
-                power - hence our primary focus is on providing UPS that output premium-grade quality power to the
-                connected load even during the most stressful situations."</p>
-        </div>
-
-        <div class="motto-box avoid-break">
-            <div class="motto-label">Our<br>motto</div>
-            <div style="flex: 1;">
-                <ul class="bullets">
-                    <li>Using our 27 years of data and industry expertise, we are committed to proactively develop
-                        technological innovations that protect / <strong>ensure maximum return on investment</strong> of
-                        your investments to <strong class="red-bold">capital equipment and infrastructure.</strong></li>
-                    <li>Ensure lesser cost of ownership per year by providing premium grade quality power even during
-                        worst load case designs.</li>
-                    <li>Extending the number of years before the first breakdown - (Maximum availability).</li>
-                    <li>Optimize the product life.</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- PROTECTION TABLE -->
-        <div class="blue-header">How does Arvi UPS ensure zero downtime of your equipment and process</div>
-
-        <p style="margin: 4px 0; font-size: 8px;">Arvi UPS ensure zero downtime of your equipment and process by
-            pre-trip alerts - Empowers the User / Maintenance technicians with protective alerts to enhance UPS Uptime.
-        </p>
-
-        <ul class="bullets">
-            <li>Pre-trip alert for over temperature or transformer and chokes.</li>
-            <li>Pre-trip alert for over temperature inside the UPS due to Fan failure or high ambient temperature.
-                Protection to Output AC capacitor Failure</li>
-            <li>Pre-trip alert for high load: (For over loads beyond the rated UPS capacity)</li>
-            <li>Pre-trip alert for overload (The UPS handles the load surge and overload for few minutes before
-                tripping)</li>
-            <li>UPS is built throughout using <span class="red-bold">Fire resistant material for safety and
-                    reliability.</span></li>
-        </ul>
-
-        <table class="data-table avoid-break">
-            <thead>
-                <tr>
-                    <th colspan="2">We ensure that your loads are comprehensively protected against any eventuality</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Output Under Voltage / Over Voltage</td>
-                    <td>Protects the load and its components from premature failure.</td>
-                </tr>
-                <tr>
-                    <td>Output Single Phase prevention</td>
-                    <td>Protects the connected three phase loads & its components from premature failure.</td>
-                </tr>
-                <tr>
-                    <td>Output short circuit with pulse by pulse current limit</td>
-                    <td>Protects against False tripping & complete shutdown in case of surge power drawn by the load
-                    </td>
-                </tr>
-                <tr>
-                    <td>Neutral shift / Neutral failure / Lightning / EMI & Harmonics</td>
-                    <td>Galvanic isolation provides complete isolation between output neutral and input</td>
-                </tr>
-                <tr>
-                    <td>High voltage transient protection & Electrostatic discharge protection</td>
-                    <td>As per IEC 62040-2</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- QUOTATION SECTION -->
-        <div class="option-header">Option I - <%= data.optionTitle || 'PFC-XR303' %>
-        </div>
-        <div class="option-title">
-            <div class="model">
-                <%= data.optionTitle || 'PFC-XR303' %>
-            </div>
-            <div class="desc">
-                <%= data.optionSubtitle
-                    || 'This is a power-conditioning topology Online UPS - specially designed for laser cutting machines.'
-                    %>
-            </div>
-        </div>
-
-        <div class="tech-box avoid-break">
-            <p>VFI power-conditioning topology with galvanic isolation for comprehensive power protection. The downtime
-                in a process is not only due to failure of power but also due to breakdown of any machines in the
-                production line.</p>
-            <ul class="bullets">
-                <li>Galvanic isolation at the output for comprehensive power protection</li>
-                <li>Generator compatible with all KVA and Power Factor</li>
-                <li>Long life, designed for harsh electrical environments</li>
-                <li>Fully DSP Controlled</li>
-                <li>HF/VHF IGBT based inverter (Zero current switching, Interleaved topology)</li>
-            </ul>
-        </div>
-
-        <table class="quote-table avoid-break">
-            <thead>
-                <tr>
-                    <th>Sl No</th>
-                    <th>Description</th>
-                    <th>Unit price</th>
-                    <th>Qty</th>
-                    <th>Value</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% if (data.items && data.items.length> 0) { %>
-                    <% data.items.forEach(function(item) { %>
-                        <tr>
-                            <td>
-                                <%= item.slno || '' %>
-                            </td>
-                            <td style="text-align: left;">
-                                <%= item.description || '' %>
-                            </td>
-                            <td>
-                                <%= item.unitPrice || '' %>
-                            </td>
-                            <td>
-                                <%= item.qty || '' %>
-                            </td>
-                            <td>
-                                <%= item.value || '' %>
-                            </td>
-                        </tr>
-                        <% }); %>
-                            <% } else { %>
-                                <tr>
-                                    <td>1</td>
-                                    <td style="text-align: left;">UPS System</td>
-                                    <td></td>
-                                    <td>1</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>1a</td>
-                                    <td style="text-align: left;">Battery Set</td>
-                                    <td></td>
-                                    <td>1</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>1b</td>
-                                    <td style="text-align: left;">Battery Stand</td>
-                                    <td></td>
-                                    <td>1</td>
-                                    <td></td>
-                                </tr>
-                                <% } %>
-            </tbody>
-        </table>
-
-        <!-- TOTAL SECTION -->
-        <% if (data.subtotal && data.subtotal> 0) { %>
-            <div class="total-section avoid-break">
-                <div class="total-row">
-                    <span class="total-label">Subtotal:</span>
-                    <span class="total-value">₹ <%= data.subtotal ? data.subtotal.toLocaleString('en-IN',
-                            {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '0.00' %></span>
-                </div>
-                <div class="total-row">
-                    <span class="total-label">GST (18%):</span>
-                    <span class="total-value">₹ <%= data.gstAmount ? data.gstAmount.toLocaleString('en-IN',
-                            {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '0.00' %></span>
-                </div>
-                <div class="total-row grand-total">
-                    <span class="total-label">Grand Total:</span>
-                    <span class="total-value">₹ <%= data.grandTotal ? data.grandTotal.toLocaleString('en-IN',
-                            {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '0.00' %></span>
-                </div>
-            </div>
-            <% } %>
-
-                <% if (data.option2Title || true) { %>
-                    <div class="option-header">Option II - <%= data.option2Title || 'PFC-XR303HS' %>
-                    </div>
-                    <div class="option-title">
-                        <div><span class="red-bold">Premium model</span> - custom-design by Arvi;</div>
-                        <div class="desc">
-                            <%= data.option2Subtitle || "designed by a team of Arvi's in-house R&D engineers." %>
-                        </div>
-                    </div>
-
-                    <table class="quote-table avoid-break">
-                        <thead>
-                            <tr>
-                                <th>Sl No</th>
-                                <th>Description</th>
-                                <th>Unit price</th>
-                                <th>Qty</th>
-                                <th>Value</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% if (data.option2Items && data.option2Items.length> 0) { %>
-                                <% data.option2Items.forEach(function(item) { %>
-                                    <tr>
-                                        <td>
-                                            <%= item.slno || '' %>
-                                        </td>
-                                        <td style="text-align: left;">
-                                            <%= item.description || '' %>
-                                        </td>
-                                        <td>
-                                            <%= item.unitPrice || '' %>
-                                        </td>
-                                        <td>
-                                            <%= item.qty || '' %>
-                                        </td>
-                                        <td>
-                                            <%= item.value || '' %>
-                                        </td>
-                                    </tr>
-                                    <% }); %>
-                                        <% } else { %>
-                                            <tr>
-                                                <td>2</td>
-                                                <td style="text-align: left;">Premium UPS System</td>
-                                                <td></td>
-                                                <td>1</td>
-                                                <td></td>
-                                            </tr>
-                                            <% } %>
-                        </tbody>
-                    </table>
-                    <p style="text-align: center; margin: 6px 0; font-size: 8px;">Cost of batteries and batteries stand
-                        <strong>remains same</strong> as mentioned in 1b to 1f.
+            <div class="ref-box-left">
+                <p><strong>To</strong></p>
+                <p><strong>M/s. <%= data.customerName || '' %></strong></p>
+                <% if (data.customerAddress) { %>
+                    <p>
+                        <%= data.customerAddress %>
                     </p>
                     <% } %>
+                        <% if (data.kindAttn) { %>
+                            <p style="margin-top:4px;"><strong>Kind Attention</strong></p>
+                            <p><strong>
+                                    <%= data.kindAttn %>
+                                </strong></p>
+                            <% } %>
+            </div>
+            <div class="ref-box-right">
+                <p><strong>REF:</strong>
+                    <%= data.quoteNumber || '' %>
+                </p>
+                <p><strong>Date :</strong>
+                    <%= data.quoteDate || new Date().toISOString().split('T')[0] %>
+                </p>
+                <% if (data.signName) { %>
+                    <p><strong>Contact Person</strong></p>
+                    <p>(<%= data.signDesig || '' %>)</p>
+                    <p><strong>
+                            <%= data.signName %>
+                        </strong></p>
+                    <% } %>
+            </div>
+        </div>
 
-                        <!-- TERMS & CONDITIONS -->
-                        <table class="terms-table avoid-break">
-                            <thead>
-                                <tr>
-                                    <th colspan="2">TERMS & CONDITIONS</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Price</td>
-                                    <td>
-                                        <%= data.priceLocation || 'For Bangalore.' %>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>GST</td>
-                                    <td>
-                                        <%= data.gstTerms || '18% extra on UPS, batteries and battery stand.' %>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Delivery</td>
-                                    <td>
-                                        <%= data.delivery
-                                            || 'Ex-works, within 2-3 weeks from receipt of confirmed order.' %>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Payment</td>
-                                    <td>
-                                        <%= data.payment || '50% advance along with order, balance before dispatch.' %>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>FAT</td>
-                                    <td>
-                                        <%= data.fat
-                                            || 'Factory Acceptance Test - We can arrange for a in-person / video online factory acceptance test of the UPS before despatch.'
-                                            %>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Warranty</td>
-                                    <td>
-                                        <%= data.warranty
-                                            || '2 years comprehensive warranty on UPS from date of installation.' %>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Validity</td>
-                                    <td>
-                                        <%= data.validity || '30 days' %>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Updates</td>
-                                    <td>
-                                        <%= data.updates
-                                            || 'You will be updated regularly about the status of progress in production.'
-                                            %>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+        <% if (data.referenceText) { %>
+            <div class="reference-text-content"><%- data.referenceText %></div>
+            <% } %>
 
-                        <!-- SIGNATURE SECTION -->
-                        <div class="signature-section">
-                            <p>Please visit us at www.arviups.com</p>
-                            <p>We hope that our offer is in line with your requirements, kindly feel free to contact us
-                                for any
-                                clarification.</p>
-                            <p>Waiting for your valuable order and looking forward for an opportunity to serve you.</p>
-                            <p>Thanking you and assuring you of our best services at all times.</p>
-                            <p style="margin-top: 10px;">warm regards,</p>
-                            <p style="margin-top: 8px;"><strong>
-                                    <%= data.signName || 'Santosh Risood' %>
-                                </strong> - <%= data.signDesig || 'General Manager- OEM Business' %>
-                            </p>
-                            <p>For Arvi Systems & Controls Pvt Ltd</p>
-                        </div>
+                <!-- SECTION 1: What sets ARVI apart -->
+                <div class="blue-header">What sets Arvi apart from the rest? Let's take a closer look.</div>
 
-                        <!-- FOOTER -->
-                        <div class="footer">
-                            <div class="company-footer">
-                                <h4>ARVI SYSTEMS & CONTROLS PVT LTD</h4>
-                                <p>80/A2, 1st main, 3rd cross, 2nd phase, Industrial suburb, Yeshwanthpur, Bangalore -
-                                    560022,
-                                    Karnataka, India</p>
-                                <p>Phone: 91 80 23470651, 23470658, Handphone: 91 9880101710, sales@arviups.com,
-                                    enquiry@arviups.com</p>
-                            </div>
-                            <div class="cert-footer">
+                <div class="section-title">1. Truly Indian with <span class="red-bold">75-80% local content/ Indian
+                        components</span></div>
+
+                <div class="content-row avoid-break">
+                    <div class="img-col">
+                        <% if (typeof isBase64 !=='undefined' && isBase64 && assetImages &&
+                            assetImages['IMG-20260205-WA0004.jpg']) { %>
+                            <img src="<%= assetImages['IMG-20260205-WA0004.jpg'] %>" alt="UPS Internal">
+                            <% } else { %>
+                                <img src="<%= assetsPath %>/IMG-20260205-WA0004.jpg" alt="UPS Internal">
+                                <% } %>
+                                    <% if (typeof isBase64 !=='undefined' && isBase64 && assetImages &&
+                                        assetImages['IMG-20260205-WA0010.jpg']) { %>
+                                        <img src="<%= assetImages['IMG-20260205-WA0010.jpg'] %>" alt="UPS Cabinet">
+                                        <% } else { %>
+                                            <img src="<%= assetsPath %>/IMG-20260205-WA0010.jpg" alt="UPS Cabinet">
+                                            <% } %>
+                    </div>
+                    <div class="text-col">
+                        <p>At a time when self-reliance is driving India's industrial backbone, Arvi stands out with a
+                            <strong>75-80% locally designed and manufactured product line</strong> - this indigenous
+                            approach
+                            not only ensures robust quality but also strengthens India's vision of <strong>"Make in
+                                India"</strong>.
+                        </p>
+
+                        <p>Many <strong>so called manufacturers import</strong> UPS or semi knocked down kits and
+                            assemble it in
+                            India under 'Make in India' initiative. But the UPS design and its sub-assembly are not
+                            Indian. They
+                            are designed for generic requirements, and are mass produced and sold as "low selling" and
+                            hence the
+                            life of these UPS are typically 5-6 years in the harsh environments of India.</p>
+
+                        <p>"Every Arvi UPS is carefully engineered and subjected to 12 rigorous stages of quality
+                            inspection and
+                            features an <strong>ensures minimum 10 years of product life</strong> - justifies the return
+                            on your
+                            high investment and low lease: cost per year."</p>
+
+                        <ul class="bullets">
+                            <li>Indigenous design</li>
+                            <li>Easy to service single DSP card</li>
+                            <li>Rugged, long life design</li>
+                            <li>Prompt & ex-stock delivery</li>
+                            <li>Power Factor Corrected, Parallel redundancy, regenerative load handling</li>
+                            <li>10 years of unconditional spare support</li>
+                            <li>Meets MOEMA norm/automation/interference</li>
+                        </ul>
+
+                        <p style="font-size: 7px; color: #666;">Esthetically designed - export compliant. Exported to
+                            Dubai,
+                            Nigeria, Philippines, Malaysia and Nepal</p>
+                    </div>
+                </div>
+
+                <!-- SECTION 2: Objective -->
+                <div class="blue-header">2. We are different in our objective and approach</div>
+
+                <p style="margin: 4px 0; font-size: 8px;"><strong style="border-bottom: 2px solid #c41e3a;">Quality of
+                        power
+                        matters</strong></p>
+
+                <p style="margin: 4px 0; font-size: 8px; text-align: justify;">We believe that the <strong
+                        class="red-bold">quality of power matters significantly</strong> and the primary objective of
+                    opting for
+                    an UPS should be to protect the high investment made on the equipment and the infrastructure apart
+                    from
+                    providing backup.</p>
+
+                <p style="margin: 4px 0; font-size: 8px; text-align: justify;">The non-linear loads pollute the quality
+                    of UPS
+                    power especially during peak-power operation; and this polluted power significantly impacts the life
+                    of the
+                    connected equipment.</p>
+
+                <p style="margin: 4px 0; font-size: 8px; text-align: justify;">Hence unlike the conventional UPS
+                    manufacturers,
+                    Arvi's approach is to ensure premium-grade power <strong>even during worst loading
+                        condition</strong> -
+                    which ensures 100% uptime and optimum product life of the connected equipment.</p>
+
+                <!-- PRINCIPLES -->
+                <div class="blue-header">PRINCIPLES THAT WE LIVE BY</div>
+
+                <div class="principles-box avoid-break">
+                    <div class="shield-icon">
+                        <div class="shield-placeholder">🛡️</div>
+                    </div>
+                    <div style="flex: 1; font-size: 8px;">
+                        <p style="color: #5a6a7a; font-weight: 600; margin-bottom: 3px;">We are passionate about the
+                            opportunity
+                            of adding value to our customers needs.</p>
+                        <p style="margin-bottom: 3px;">We are a huge beneficiary of the society and we would like to
+                            give back
+                            to the society by using our expertise of 27 years, in-house R&D and indigenous manufacturing
+                            capability, add value to our customer's requirements by providing need-based, innovative,
+                            reliable,
+                            power-conditioning products with high quality service support.</p>
+                        <p>We are also determined to be passionate about what we do and how it influences our customer
+                            experience - we shall conduct ourselves with highest order of ethical values and commitment.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- MANUFACTURING FACILITY -->
+                <div class="blue-header">3. State-of-art manufacturing facility with Strong end to end In-house R&D team
+                </div>
+
+                <p style="text-align: center; margin: 4px 0; font-size: 9px;">• Manufacturer and exporter of <span
+                        class="red-bold">industrial grade UPS for OEMs</span> since 1998.</p>
+
+                <div class="img-row avoid-break">
+                    <% if (typeof isBase64 !=='undefined' && isBase64 && assetImages &&
+                        assetImages['IMG-20260205-WA0007.jpg']) { %>
+                        <img src="<%= assetImages['IMG-20260205-WA0007.jpg'] %>" alt="Manufacturing 1">
+                        <% } else { %>
+                            <img src="<%= assetsPath %>/IMG-20260205-WA0007.jpg" alt="Manufacturing 1">
+                            <% } %>
                                 <% if (typeof isBase64 !=='undefined' && isBase64 && assetImages &&
-                                    assetImages['IMG-20260205-WA0009.jpg']) { %>
-                                    <img src="<%= assetImages['IMG-20260205-WA0009.jpg'] %>" alt="Certifications">
+                                    assetImages['IMG-20260205-WA0008.jpg']) { %>
+                                    <img src="<%= assetImages['IMG-20260205-WA0008.jpg'] %>" alt="Manufacturing 2">
                                     <% } else { %>
-                                        <img src="<%= assetsPath %>/IMG-20260205-WA0009.jpg" alt="Certifications">
+                                        <img src="<%= assetsPath %>/IMG-20260205-WA0008.jpg" alt="Manufacturing 2">
                                         <% } %>
-                                            <span><strong class="red">Arvi</strong>UPS.com OEM manufacturers of
-                                                Industrial grade
-                                                UPS since 1998.</span>
-                            </div>
+                                            <% if (typeof isBase64 !=='undefined' && isBase64 && assetImages &&
+                                                assetImages['IMG-20260205-WA0006.jpg']) { %>
+                                                <img src="<%= assetImages['IMG-20260205-WA0006.jpg'] %>"
+                                                    alt="Manufacturing 3">
+                                                <% } else { %>
+                                                    <img src="<%= assetsPath %>/IMG-20260205-WA0006.jpg"
+                                                        alt="Manufacturing 3">
+                                                    <% } %>
+                </div>
+
+                <p style="text-align: center; margin: 6px 0; font-size: 8px;">• Awarded as the best in-house R&D among
+                    Indian
+                    UPS manufacturers by SoftDisk</p>
+
+                <div class="stats-row avoid-break">
+                    <div class="stat">
+                        <div class="number">27</div>
+                        <div class="label"><span class="red">years</span> of industry expertise</div>
+                    </div>
+                    <div class="stat">
+                        <div class="number">1,26,000+</div>
+                        <div class="label"><span class="red">successful</span> installations</div>
+                    </div>
+                </div>
+
+                <!-- TECHNICAL EXPERT INSIGHT -->
+                <div class="blue-header">Our technical expert's insight</div>
+
+                <div class="quote-box avoid-break">
+                    <p>"We understand that the cost of downtime and premature failure of the connected equipment is very
+                        costly
+                        as the investment done on the same is very high. Arvi UPS primarily serves as a <span
+                            class="red-bold">virtual insurance to your high cost investment</span>; serving as a high
+                        insurance
+                        to downtime (daily power issues apart from being a UPS)"</p>
+                    <p>"Based on a field study conducted by our engineering team we have found that the quality of the
+                        UPS power
+                        determines the anticipated product life and the product life of the connected equipment."</p>
+                    <p>"Equipment availability (which ensures tip of functioning) is directly linked to the quality of
+                        the UPS
+                        power - hence our primary focus is on providing UPS that output premium-grade quality power to
+                        the
+                        connected load even during the most stressful situations."</p>
+                </div>
+
+                <div class="motto-box avoid-break">
+                    <div class="motto-label">Our<br>motto</div>
+                    <div style="flex: 1;">
+                        <ul class="bullets">
+                            <li>Using our 27 years of data and industry expertise, we are committed to proactively
+                                develop
+                                technological innovations that protect / <strong>ensure maximum return on
+                                    investment</strong> of
+                                your investments to <strong class="red-bold">capital equipment and
+                                    infrastructure.</strong></li>
+                            <li>Ensure lesser cost of ownership per year by providing premium grade quality power even
+                                during
+                                worst load case designs.</li>
+                            <li>Extending the number of years before the first breakdown - (Maximum availability).</li>
+                            <li>Optimize the product life.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- PROTECTION TABLE -->
+                <div class="blue-header">How does Arvi UPS ensure zero downtime of your equipment and process</div>
+
+                <p style="margin: 4px 0; font-size: 8px;">Arvi UPS ensure zero downtime of your equipment and process by
+                    pre-trip alerts - Empowers the User / Maintenance technicians with protective alerts to enhance UPS
+                    Uptime.
+                </p>
+
+                <ul class="bullets">
+                    <li>Pre-trip alert for over temperature or transformer and chokes.</li>
+                    <li>Pre-trip alert for over temperature inside the UPS due to Fan failure or high ambient
+                        temperature.
+                        Protection to Output AC capacitor Failure</li>
+                    <li>Pre-trip alert for high load: (For over loads beyond the rated UPS capacity)</li>
+                    <li>Pre-trip alert for overload (The UPS handles the load surge and overload for few minutes before
+                        tripping)</li>
+                    <li>UPS is built throughout using <span class="red-bold">Fire resistant material for safety and
+                            reliability.</span></li>
+                </ul>
+
+                <table class="data-table avoid-break">
+                    <thead>
+                        <tr>
+                            <th colspan="2">We ensure that your loads are comprehensively protected against any
+                                eventuality</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Output Under Voltage / Over Voltage</td>
+                            <td>Protects the load and its components from premature failure.</td>
+                        </tr>
+                        <tr>
+                            <td>Output Single Phase prevention</td>
+                            <td>Protects the connected three phase loads & its components from premature failure.</td>
+                        </tr>
+                        <tr>
+                            <td>Output short circuit with pulse by pulse current limit</td>
+                            <td>Protects against False tripping & complete shutdown in case of surge power drawn by the
+                                load
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Neutral shift / Neutral failure / Lightning / EMI & Harmonics</td>
+                            <td>Galvanic isolation provides complete isolation between output neutral and input</td>
+                        </tr>
+                        <tr>
+                            <td>High voltage transient protection & Electrostatic discharge protection</td>
+                            <td>As per IEC 62040-2</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- QUOTATION SECTION -->
+                <div class="option-header">Option I - <%= data.optionTitle || 'PFC-XR303' %>
+                </div>
+                <div class="option-title">
+                    <div class="model">
+                        <%= data.optionTitle || 'PFC-XR303' %>
+                    </div>
+                    <div class="desc">
+                        <%= data.optionSubtitle
+                            || 'This is a power-conditioning topology Online UPS - specially designed for laser cutting machines.'
+                            %>
+                    </div>
+                </div>
+
+                <div class="tech-box avoid-break">
+                    <p>VFI power-conditioning topology with galvanic isolation for comprehensive power protection. The
+                        downtime
+                        in a process is not only due to failure of power but also due to breakdown of any machines in
+                        the
+                        production line.</p>
+                    <ul class="bullets">
+                        <li>Galvanic isolation at the output for comprehensive power protection</li>
+                        <li>Generator compatible with all KVA and Power Factor</li>
+                        <li>Long life, designed for harsh electrical environments</li>
+                        <li>Fully DSP Controlled</li>
+                        <li>HF/VHF IGBT based inverter (Zero current switching, Interleaved topology)</li>
+                    </ul>
+                </div>
+
+                <table class="quote-table avoid-break">
+                    <thead>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Description</th>
+                            <th>Unit price</th>
+                            <th>Qty</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (data.items && data.items.length> 0) { %>
+                            <% data.items.forEach(function(item) { %>
+                                <tr>
+                                    <td>
+                                        <%= item.slno || '' %>
+                                    </td>
+                                    <td style="text-align: left;">
+                                        <%= item.description || '' %>
+                                    </td>
+                                    <td>
+                                        <%= item.unitPrice || '' %>
+                                    </td>
+                                    <td>
+                                        <%= item.qty || '' %>
+                                    </td>
+                                    <td>
+                                        <%= item.value || '' %>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                                    <% } else { %>
+                                        <tr>
+                                            <td>1</td>
+                                            <td style="text-align: left;">UPS System</td>
+                                            <td></td>
+                                            <td>1</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>1a</td>
+                                            <td style="text-align: left;">Battery Set</td>
+                                            <td></td>
+                                            <td>1</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>1b</td>
+                                            <td style="text-align: left;">Battery Stand</td>
+                                            <td></td>
+                                            <td>1</td>
+                                            <td></td>
+                                        </tr>
+                                        <% } %>
+                    </tbody>
+                </table>
+
+                <!-- TOTAL SECTION -->
+                <% if (data.subtotal && data.subtotal> 0) { %>
+                    <div class="total-section avoid-break">
+                        <div class="total-row">
+                            <span class="total-label">Subtotal:</span>
+                            <span class="total-value">₹ <%= data.subtotal ? data.subtotal.toLocaleString('en-IN',
+                                    {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '0.00' %></span>
                         </div>
+                        <div class="total-row">
+                            <span class="total-label">GST (18%):</span>
+                            <span class="total-value">₹ <%= data.gstAmount ? data.gstAmount.toLocaleString('en-IN',
+                                    {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '0.00' %></span>
+                        </div>
+                        <div class="total-row grand-total">
+                            <span class="total-label">Grand Total:</span>
+                            <span class="total-value">₹ <%= data.grandTotal ? data.grandTotal.toLocaleString('en-IN',
+                                    {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '0.00' %></span>
+                        </div>
+                    </div>
+                    <% } %>
+
+                        <% if (data.option2Title || true) { %>
+                            <div class="option-header">Option II - <%= data.option2Title || 'PFC-XR303HS' %>
+                            </div>
+                            <div class="option-title">
+                                <div><span class="red-bold">Premium model</span> - custom-design by Arvi;</div>
+                                <div class="desc">
+                                    <%= data.option2Subtitle || "designed by a team of Arvi's in-house R&D engineers."
+                                        %>
+                                </div>
+                            </div>
+
+                            <table class="quote-table avoid-break">
+                                <thead>
+                                    <tr>
+                                        <th>Sl No</th>
+                                        <th>Description</th>
+                                        <th>Unit price</th>
+                                        <th>Qty</th>
+                                        <th>Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% if (data.option2Items && data.option2Items.length> 0) { %>
+                                        <% data.option2Items.forEach(function(item) { %>
+                                            <tr>
+                                                <td>
+                                                    <%= item.slno || '' %>
+                                                </td>
+                                                <td style="text-align: left;">
+                                                    <%= item.description || '' %>
+                                                </td>
+                                                <td>
+                                                    <%= item.unitPrice || '' %>
+                                                </td>
+                                                <td>
+                                                    <%= item.qty || '' %>
+                                                </td>
+                                                <td>
+                                                    <%= item.value || '' %>
+                                                </td>
+                                            </tr>
+                                            <% }); %>
+                                                <% } else { %>
+                                                    <tr>
+                                                        <td>2</td>
+                                                        <td style="text-align: left;">Premium UPS System</td>
+                                                        <td></td>
+                                                        <td>1</td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <% } %>
+                                </tbody>
+                            </table>
+                            <p style="text-align: center; margin: 6px 0; font-size: 8px;">Cost of batteries and
+                                batteries stand
+                                <strong>remains same</strong> as mentioned in 1b to 1f.
+                            </p>
+                            <% } %>
+
+                                <!-- TERMS & CONDITIONS -->
+                                <table class="terms-table avoid-break">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2">TERMS & CONDITIONS</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Price</td>
+                                            <td>
+                                                <%= data.priceLocation || 'For Bangalore.' %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>GST</td>
+                                            <td>
+                                                <%= data.gstTerms || '18% extra on UPS, batteries and battery stand.' %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Delivery</td>
+                                            <td>
+                                                <%= data.delivery
+                                                    || 'Ex-works, within 2-3 weeks from receipt of confirmed order.' %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Payment</td>
+                                            <td>
+                                                <%= data.payment
+                                                    || '50% advance along with order, balance before dispatch.' %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>FAT</td>
+                                            <td>
+                                                <%= data.fat
+                                                    || 'Factory Acceptance Test - We can arrange for a in-person / video online factory acceptance test of the UPS before despatch.'
+                                                    %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Warranty</td>
+                                            <td>
+                                                <%= data.warranty
+                                                    || '2 years comprehensive warranty on UPS from date of installation.'
+                                                    %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Validity</td>
+                                            <td>
+                                                <%= data.validity || '30 days' %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Updates</td>
+                                            <td>
+                                                <%= data.updates
+                                                    || 'You will be updated regularly about the status of progress in production.'
+                                                    %>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <!-- SIGNATURE SECTION -->
+                                <div class="signature-section">
+                                    <p>Please visit us at www.arviups.com</p>
+                                    <p>We hope that our offer is in line with your requirements, kindly feel free to
+                                        contact us
+                                        for any
+                                        clarification.</p>
+                                    <p>Waiting for your valuable order and looking forward for an opportunity to serve
+                                        you.</p>
+                                    <p>Thanking you and assuring you of our best services at all times.</p>
+                                    <p style="margin-top: 10px;">warm regards,</p>
+                                    <p style="margin-top: 8px;"><strong>
+                                            <%= data.signName || 'Santosh Risood' %>
+                                        </strong> - <%= data.signDesig || 'General Manager- OEM Business' %>
+                                    </p>
+                                    <p>For Arvi Systems & Controls Pvt Ltd</p>
+                                </div>
+
+                                <!-- FOOTER -->
+                                <div class="footer-image">
+                                    <% if (typeof isBase64 !=='undefined' && isBase64 && assetImages &&
+                                        assetImages['new_footer.jpg']) { %>
+                                        <img src="<%= assetImages['new_footer.jpg'] %>" alt="ARVI Footer"
+                                            style="width:100%;display:block;">
+                                        <% } else { %>
+                                            <img src="<%= assetsPath %>/new_footer.jpg" alt="ARVI Footer"
+                                                style="width:100%;display:block;">
+                                            <% } %>
+                                </div>
     </div>
 </body>
 

@@ -118,6 +118,12 @@ function getFormData() {
         }
     }
 
+    // Capture rich text HTML content from contenteditable editor
+    const referenceEditor = document.getElementById('referenceText');
+    if (referenceEditor) {
+        data.referenceText = referenceEditor.innerHTML;
+    }
+
     // Get items
     data.items = [];
     document.querySelectorAll('#itemsTableBody .item-row').forEach(row => {
@@ -185,35 +191,174 @@ async function generatePDF() {
     loading.classList.add('active');
 
     try {
-        const response = await fetch('/api/generate', {
+        const response = await fetch('/api/generate-pdf', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
 
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.details || 'Failed to generate PDF');
+            throw new Error('PDF generation failed');
         }
 
-        // Handle PDF download
         const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
+        const url = URL.createObjectURL(blob);
+
+        // Download
         const a = document.createElement('a');
-        a.style.display = 'none';
         a.href = url;
         a.download = `ARVI_Quotation_${data.quoteNumber || 'Q001'}.pdf`;
         document.body.appendChild(a);
         a.click();
-
-        // Cleanup
-        window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
+        URL.revokeObjectURL(url);
 
     } catch (error) {
         console.error('PDF generation error:', error);
-        alert(`Error generating PDF: ${error.message}`);
+        alert('Error generating PDF. Please try again.');
     } finally {
         loading.classList.remove('active');
     }
 }
+
+// ===================
+// Rich Text Editor
+// ===================
+
+let savedSelection = null;
+
+function saveSelection() {
+    const sel = window.getSelection();
+    if (sel.rangeCount > 0) {
+        savedSelection = sel.getRangeAt(0).cloneRange();
+    }
+}
+
+function restoreSelection() {
+    if (savedSelection) {
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(savedSelection);
+    }
+}
+
+function execFormat(command) {
+    const editor = document.getElementById('referenceText');
+    editor.focus();
+    document.execCommand(command, false, null);
+    updateToolbarState();
+    syncRichText();
+}
+
+function applyFontSize(size) {
+    if (!size) return;
+    const editor = document.getElementById('referenceText');
+    editor.focus();
+    restoreSelection();
+
+    const sel = window.getSelection();
+    if (!sel.rangeCount) return;
+
+    const range = sel.getRangeAt(0);
+    if (range.collapsed) {
+        document.getElementById('fontSizeSelect').value = '';
+        return;
+    }
+
+    const span = document.createElement('span');
+    span.style.fontSize = size;
+
+    try {
+        const contents = range.extractContents();
+        span.appendChild(contents);
+        range.insertNode(span);
+        sel.removeAllRanges();
+        const newRange = document.createRange();
+        newRange.selectNodeContents(span);
+        sel.addRange(newRange);
+    } catch (e) {
+        console.error('Font size error:', e);
+    }
+
+    syncRichText();
+    document.getElementById('fontSizeSelect').value = '';
+}
+
+function applyFontColor(color) {
+    const editor = document.getElementById('referenceText');
+    editor.focus();
+    restoreSelection();
+
+    const sel = window.getSelection();
+    if (!sel.rangeCount) return;
+
+    const range = sel.getRangeAt(0);
+    if (range.collapsed) return;
+
+    const span = document.createElement('span');
+    span.style.color = color;
+
+    try {
+        const contents = range.extractContents();
+        span.appendChild(contents);
+        range.insertNode(span);
+        sel.removeAllRanges();
+        const newRange = document.createRange();
+        newRange.selectNodeContents(span);
+        sel.addRange(newRange);
+    } catch (e) {
+        console.error('Font color error:', e);
+    }
+
+    syncRichText();
+}
+
+function updateToolbarState() {
+    const boldBtn = document.getElementById('boldBtn');
+    const italicBtn = document.getElementById('italicBtn');
+    if (boldBtn) {
+        boldBtn.classList.toggle('active', document.queryCommandState('bold'));
+    }
+    if (italicBtn) {
+        italicBtn.classList.toggle('active', document.queryCommandState('italic'));
+    }
+}
+
+function syncRichText() {
+    const editor = document.getElementById('referenceText');
+    const hidden = document.getElementById('referenceTextHidden');
+    if (editor && hidden) {
+        hidden.value = editor.innerHTML;
+    }
+}
+
+function initRichTextEditor() {
+    const editor = document.getElementById('referenceText');
+    if (!editor) return;
+
+    editor.addEventListener('input', syncRichText);
+    editor.addEventListener('mouseup', saveSelection);
+    editor.addEventListener('keyup', saveSelection);
+
+    document.addEventListener('selectionchange', function () {
+        if (document.activeElement === editor) {
+            updateToolbarState();
+            saveSelection();
+        }
+    });
+
+    editor.addEventListener('keydown', function (e) {
+        if (e.ctrlKey || e.metaKey) {
+            if (e.key === 'b') {
+                e.preventDefault();
+                execFormat('bold');
+            } else if (e.key === 'i') {
+                e.preventDefault();
+                execFormat('italic');
+            }
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', initRichTextEditor);
+

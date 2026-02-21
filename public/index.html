@@ -7,11 +7,6 @@
     <title>ARVI Power - Quotation Generator</title>
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Quill Rich Text Editor -->
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
 <body>
@@ -55,35 +50,58 @@
                             <input type="date" id="quoteDate" name="quoteDate" required>
                         </div>
                         <div class="form-group">
-                            <label for="customerRef">Customer Ref (Rich Text)</label>
-                            <div id="customerRefEditor" class="rich-text-editor" style="height: 60px;"></div>
-                            <input type="hidden" id="customerRef" name="customerRef">
+                            <label for="customerRef">Customer Ref</label>
+                            <input type="text" id="customerRef" name="customerRef" placeholder="Customer reference">
                         </div>
                     </div>
-                    
+                    <div class="form-group full-width">
+                        <label for="referenceText">Reference Details (Site visits, meetings, etc.)</label>
+                        <div class="rich-text-toolbar" id="refToolbar">
+                            <button type="button" class="toolbar-btn" id="boldBtn" title="Bold (Ctrl+B)"
+                                onclick="execFormat('bold')"><b>B</b></button>
+                            <button type="button" class="toolbar-btn" id="italicBtn" title="Italic (Ctrl+I)"
+                                onclick="execFormat('italic')"><i>I</i></button>
+                            <div class="toolbar-separator"></div>
+                            <button type="button" class="toolbar-btn" id="bulletBtn" title="Bullet List"
+                                onclick="execFormat('insertUnorderedList')">☰</button>
+                            <div class="toolbar-separator"></div>
+                            <label class="toolbar-label" for="fontSizeSelect">Size:</label>
+                            <select id="fontSizeSelect" class="toolbar-select" onchange="applyFontSize(this.value)">
+                                <option value="">Default</option>
+                                <option value="10px">10px</option>
+                                <option value="12px">12px</option>
+                                <option value="14px">14px</option>
+                                <option value="16px">16px</option>
+                                <option value="18px">18px</option>
+                                <option value="20px">20px</option>
+                                <option value="24px">24px</option>
+                                <option value="28px">28px</option>
+                                <option value="32px">32px</option>
+                            </select>
+                            <div class="toolbar-separator"></div>
+                            <label class="toolbar-label" for="fontColorInput">Color:</label>
+                            <input type="color" id="fontColorInput" class="toolbar-color" value="#000000"
+                                oninput="applyFontColor(this.value)" title="Font Color">
+                        </div>
+                        <div class="rich-text-editor" id="referenceText" contenteditable="true"
+                            data-placeholder="Dear Sir/Madam,&#10;&#10;With reference to your enquiry and our site visit dated ________, we are pleased to submit our quotation for the following:&#10;&#10;[Add any other reference details here]">
+                        </div>
+                        <input type="hidden" id="referenceTextHidden" name="referenceText">
+                    </div>
                     <div class="form-grid cols-2">
                         <div class="form-group">
-                            <label for="customerName">Customer / Company Name (Rich Text)</label>
-                            <div id="customerNameEditor" class="rich-text-editor" style="height: 80px;"></div>
-                            <input type="hidden" id="customerName" name="customerName">
+                            <label for="customerName">Customer / Company Name</label>
+                            <input type="text" id="customerName" name="customerName" placeholder="Enter company name"
+                                required>
                         </div>
                         <div class="form-group">
-                            <label for="customerAddress">Address (Rich Text)</label>
-                            <div id="customerAddressEditor" class="rich-text-editor" style="height: 80px;"></div>
-                            <input type="hidden" id="customerAddress" name="customerAddress">
+                            <label for="customerAddress">Address</label>
+                            <input type="text" id="customerAddress" name="customerAddress" placeholder="City, State">
                         </div>
                     </div>
-
                     <div class="form-group full-width">
-                        <label for="kindAttn">Kind Attention (Rich Text)</label>
-                        <div id="kindAttnEditor" class="rich-text-editor" style="height: 60px;"></div>
-                        <input type="hidden" id="kindAttn" name="kindAttn">
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label for="referenceText">Reference Details (Rich Text)</label>
-                        <div id="referenceTextEditor" class="rich-text-editor" style="height: 150px;"></div>
-                        <input type="hidden" id="referenceText" name="referenceText">
+                        <label for="kindAttn">Kind Attention</label>
+                        <input type="text" id="kindAttn" name="kindAttn" placeholder="Mr./Ms. Name, Designation">
                     </div>
                 </section>
 
@@ -96,21 +114,34 @@
 
                     <div class="form-grid cols-2">
                         <div class="form-group">
-                            <label for="optionTitle">Option Title (Rich Text)</label>
-                            <div id="optionTitleEditor" class="rich-text-editor" style="height: 60px;"></div>
-                            <input type="hidden" id="optionTitle" name="optionTitle">
+                            <label for="optionTitle">Option Title</label>
+                            <input type="text" id="optionTitle" name="optionTitle" value="PFC-XR303"
+                                placeholder="e.g., PFC-XR303">
                         </div>
                         <div class="form-group">
-                            <label for="optionSubtitle">Subtitle (Rich Text)</label>
-                            <div id="optionSubtitleEditor" class="rich-text-editor" style="height: 60px;"></div>
-                            <input type="hidden" id="optionSubtitle" name="optionSubtitle">
+                            <label for="optionSubtitle">Subtitle/Description</label>
+                            <input type="text" id="optionSubtitle" name="optionSubtitle"
+                                value="This is a power-conditioning topology Online UPS - specially designed for laser cutting machines."
+                                placeholder="Brief description">
                         </div>
                     </div>
 
                     <div class="form-group full-width">
-                        <label for="optionDetails">Technical Details (Rich Text)</label>
-                        <div id="optionDetailsEditor" class="rich-text-editor" style="height: 150px;"></div>
-                        <input type="hidden" id="optionDetails" name="optionDetails">
+                        <label for="optionDetails">Technical Details (Bullet points)</label>
+                        <textarea id="optionDetails" name="optionDetails" rows="6" placeholder="VFI power-conditioning topology with galvanic isolation for comprehensive power protection
+• Galvanic isolation at the output for comprehensive power protection
+• Generator compatible with all KVA and Power Factor
+• Long life, designed for maintenance and environment
+• Fully DSP Controlled
+• HF/VHF IGBT based inverter (Operated in Zero current switching, Interleaved)">VFI power-conditioning topology with galvanic isolation for comprehensive power protection.
+The downtime in a process is not only due to failure of power but also due to breakdown of any machines in the production line - mainly the failure of electrical or electronic parts in the machine.
+Power experts attribute this failure to the poor quality of power.
+
+• Galvanic isolation at the output for comprehensive power protection
+• Generator compatible with all KVA and Power Factor
+• Long life, designed for maintenance and environment
+• Fully DSP Controlled
+• HF/VHF IGBT based inverter (Operated in Zero current switching, Interleaved)</textarea>
                     </div>
 
                     <div id="itemsContainer">
@@ -118,7 +149,7 @@
                             <thead>
                                 <tr>
                                     <th style="width: 60px;">Sl No</th>
-                                    <th>Description (Rich Text)</th>
+                                    <th>Description</th>
                                     <th style="width: 100px;">Unit Price</th>
                                     <th style="width: 70px;">Qty</th>
                                     <th style="width: 100px;">Value</th>
@@ -126,7 +157,39 @@
                                 </tr>
                             </thead>
                             <tbody id="itemsTableBody">
-                                <!-- Dynamic rows -->
+                                <tr class="item-row" data-index="0">
+                                    <td><input type="text" name="items[0][slno]" value="1" class="input-small"></td>
+                                    <td><textarea name="items[0][description]" rows="2"
+                                            placeholder="Description of item..."></textarea></td>
+                                    <td><input type="number" name="items[0][unitPrice]" class="price-input"
+                                            placeholder="0" onchange="calculateItemValue(0); calculateTotal();"></td>
+                                    <td><input type="number" name="items[0][qty]" value="1" min="1" class="qty-input"
+                                            onchange="calculateItemValue(0); calculateTotal();"></td>
+                                    <td><input type="text" name="items[0][value]" readonly class="value-input"></td>
+                                    <td><button type="button" class="btn-remove" onclick="removeItem(0)">✕</button></td>
+                                </tr>
+                                <tr class="item-row" data-index="1">
+                                    <td><input type="text" name="items[1][slno]" value="1a" class="input-small"></td>
+                                    <td><textarea name="items[1][description]" rows="2"
+                                            placeholder="Sub-item description..."></textarea></td>
+                                    <td><input type="number" name="items[1][unitPrice]" class="price-input"
+                                            placeholder="0" onchange="calculateItemValue(1); calculateTotal();"></td>
+                                    <td><input type="number" name="items[1][qty]" value="1" min="1" class="qty-input"
+                                            onchange="calculateItemValue(1); calculateTotal();"></td>
+                                    <td><input type="text" name="items[1][value]" readonly class="value-input"></td>
+                                    <td><button type="button" class="btn-remove" onclick="removeItem(1)">✕</button></td>
+                                </tr>
+                                <tr class="item-row" data-index="2">
+                                    <td><input type="text" name="items[2][slno]" value="1b" class="input-small"></td>
+                                    <td><textarea name="items[2][description]" rows="2"
+                                            placeholder="Sub-item description..."></textarea></td>
+                                    <td><input type="number" name="items[2][unitPrice]" class="price-input"
+                                            placeholder="0" onchange="calculateItemValue(2); calculateTotal();"></td>
+                                    <td><input type="number" name="items[2][qty]" value="1" min="1" class="qty-input"
+                                            onchange="calculateItemValue(2); calculateTotal();"></td>
+                                    <td><input type="text" name="items[2][value]" readonly class="value-input"></td>
+                                    <td><button type="button" class="btn-remove" onclick="removeItem(2)">✕</button></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -151,6 +214,62 @@
                     </div>
                 </section>
 
+                <!-- Option II (Optional) -->
+                <section class="form-section collapsible">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <h2><span class="section-icon">⚡</span> Option II (Optional)</h2>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="section-content">
+                        <div class="form-grid cols-2">
+                            <div class="form-group">
+                                <label for="option2Title">Option II Title</label>
+                                <input type="text" id="option2Title" name="option2Title"
+                                    placeholder="e.g., PFC-XR303HS">
+                            </div>
+                            <div class="form-group">
+                                <label for="option2Subtitle">Subtitle</label>
+                                <input type="text" id="option2Subtitle" name="option2Subtitle"
+                                    placeholder="Premium model - custom design by Arvi">
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="option2Details">Details</label>
+                            <textarea id="option2Details" name="option2Details" rows="3"
+                                placeholder="designed by a team of Arvi's in-house R&D engineers..."></textarea>
+                        </div>
+                        <div id="option2ItemsContainer">
+                            <table class="items-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 60px;">Sl No</th>
+                                        <th>Description</th>
+                                        <th style="width: 100px;">Unit Price</th>
+                                        <th style="width: 70px;">Qty</th>
+                                        <th style="width: 100px;">Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="option2TableBody">
+                                    <tr>
+                                        <td><input type="text" name="option2Items[0][slno]" value="2"
+                                                class="input-small"></td>
+                                        <td><textarea name="option2Items[0][description]" rows="2"
+                                                placeholder="Description..."></textarea></td>
+                                        <td><input type="number" name="option2Items[0][unitPrice]" class="price-input"
+                                                placeholder="0"></td>
+                                        <td><input type="number" name="option2Items[0][qty]" value="1" min="1"
+                                                class="qty-input"></td>
+                                        <td><input type="text" name="option2Items[0][value]" readonly
+                                                class="value-input"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="note-text">Cost of batteries and batteries stand <strong>remains same</strong> as
+                            mentioned in 1b to 1f.</p>
+                    </div>
+                </section>
+
                 <!-- Terms & Conditions -->
                 <section class="form-section">
                     <div class="section-header">
@@ -158,47 +277,42 @@
                     </div>
                     <div class="form-grid cols-2">
                         <div class="form-group">
-                            <label>Price (Rich Text)</label>
-                            <div id="priceLocationEditor" class="rich-text-editor" style="height: 60px;"></div>
-                            <input type="hidden" name="priceLocation" id="priceLocation">
+                            <label for="priceLocation">Price</label>
+                            <input type="text" id="priceLocation" name="priceLocation" value="For Bangalore">
                         </div>
                         <div class="form-group">
-                            <label>GST (Rich Text)</label>
-                            <div id="gstTermsEditor" class="rich-text-editor" style="height: 60px;"></div>
-                            <input type="hidden" name="gstTerms" id="gstTerms">
+                            <label for="gstTerms">GST</label>
+                            <input type="text" id="gstTerms" name="gstTerms"
+                                value="18% extra on UPS, batteries and battery stand.">
                         </div>
                         <div class="form-group">
-                            <label>Delivery (Rich Text)</label>
-                            <div id="deliveryEditor" class="rich-text-editor" style="height: 60px;"></div>
-                            <input type="hidden" name="delivery" id="delivery">
+                            <label for="delivery">Delivery</label>
+                            <input type="text" id="delivery" name="delivery" placeholder="e.g., 2-3 weeks">
                         </div>
                         <div class="form-group">
-                            <label>Payment (Rich Text)</label>
-                            <div id="paymentEditor" class="rich-text-editor" style="height: 60px;"></div>
-                            <input type="hidden" name="payment" id="payment">
+                            <label for="payment">Payment</label>
+                            <input type="text" id="payment" name="payment" placeholder="e.g., 100% Advance">
                         </div>
                     </div>
                     <div class="form-group full-width">
-                        <label>FAT (Rich Text)</label>
-                        <div id="fatEditor" class="rich-text-editor" style="height: 80px;"></div>
-                        <input type="hidden" name="fat" id="fat">
+                        <label for="fat">FAT (Factory Acceptance Test)</label>
+                        <textarea id="fat" name="fat" rows="2"
+                            placeholder="Factory Acceptance Test (FAT) - We can arrange for a in-person / video online factory acceptance test of the UPS before despatch...">Factory Acceptance Test (FAT) - We can arrange for a in-person / video online factory acceptance test of the UPS before despatch; we will mail you the test report of the UPS and you could verify the parameters online via video call or in person in our factory.</textarea>
                     </div>
                     <div class="form-grid cols-2">
                         <div class="form-group">
-                            <label>Warranty (Rich Text)</label>
-                            <div id="warrantyEditor" class="rich-text-editor" style="height: 60px;"></div>
-                            <input type="hidden" name="warranty" id="warranty">
+                            <label for="warranty">Warranty</label>
+                            <input type="text" id="warranty" name="warranty" placeholder="e.g., 2 years">
                         </div>
                         <div class="form-group">
-                            <label>Validity (Rich Text)</label>
-                            <div id="validityEditor" class="rich-text-editor" style="height: 60px;"></div>
-                            <input type="hidden" name="validity" id="validity">
+                            <label for="validity">Validity</label>
+                            <input type="text" id="validity" name="validity" value="30 days">
                         </div>
                     </div>
                     <div class="form-group full-width">
-                        <label>Updates (Rich Text)</label>
-                        <div id="updatesEditor" class="rich-text-editor" style="height: 80px;"></div>
-                        <input type="hidden" name="updates" id="updates">
+                        <label for="updates">Updates</label>
+                        <textarea id="updates" name="updates"
+                            rows="2">You will be updated regularly about the status of progress in production (Image / Video); as the product moves from one section to another, we will send you updates.</textarea>
                     </div>
                 </section>
 
@@ -209,14 +323,13 @@
                     </div>
                     <div class="form-grid cols-2">
                         <div class="form-group">
-                            <label for="signName">Name (Rich Text)</label>
-                            <div id="signNameEditor" class="rich-text-editor" style="height: 80px;"></div>
-                            <input type="hidden" id="signName" name="signName">
+                            <label for="signName">Name</label>
+                            <input type="text" id="signName" name="signName" placeholder="e.g., Santosh Relopal">
                         </div>
                         <div class="form-group">
-                            <label for="signDesig">Designation (Rich Text)</label>
-                            <div id="signDesigEditor" class="rich-text-editor" style="height: 80px;"></div>
-                            <input type="hidden" id="signDesig" name="signDesig">
+                            <label for="signDesig">Designation</label>
+                            <input type="text" id="signDesig" name="signDesig"
+                                placeholder="e.g., General Manager- OEM Business">
                         </div>
                     </div>
                 </section>
