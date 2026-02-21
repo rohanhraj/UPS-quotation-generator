@@ -53,7 +53,7 @@ function getAssetImages() {
 }
 
 // Generate PDF endpoint
-app.post('/api/generate-pdf', async (req, res) => {
+app.post('/api/generate', async (req, res) => {
     let browser = null;
 
     try {
