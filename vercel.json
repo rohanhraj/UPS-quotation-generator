@@ -4,12 +4,12 @@
         "api/preview.js": {
             "memory": 512,
             "maxDuration": 30,
-            "includeFiles": "{views/**,public/assets/**}"
+            "includeFiles": "{views/**,public/assets/**,assets/**}"
         },
         "api/generate.js": {
             "memory": 1024,
             "maxDuration": 60,
-            "includeFiles": "{views/**,public/assets/**}"
+            "includeFiles": "{views/**,public/assets/**,assets/**}"
         },
         "api/health.js": {
             "memory": 128,
@@ -20,6 +20,10 @@
         {
             "source": "/api/preview",
             "destination": "/api/preview"
+        },
+        {
+            "source": "/api/generate",
+            "destination": "/api/generate"
         },
         {
             "source": "/api/health",
