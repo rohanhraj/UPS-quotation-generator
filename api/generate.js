@@ -69,13 +69,11 @@ module.exports = async (req, res) => {
 
         let executablePath = await chromium.executablePath();
         if (!executablePath) {
-            // Fallback for local development if chromium path isn't found
-            // This requires a local chrome installation or puppeteer's downloaded chrome
             try {
-                const localPuppeteer = require('puppeteer');
-                executablePath = localPuppeteer.executablePath();
+                // Try Mac Chrome path
+                executablePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
             } catch (e) {
-                console.warn('Local puppeteer not found, using default path');
+                console.warn('Local chrome not found, using default path');
             }
         }
 
