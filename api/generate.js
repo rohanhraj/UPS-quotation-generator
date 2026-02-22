@@ -1,4 +1,9 @@
-const chromium = require('@sparticuz/chromium');
+// Set AWS Lambda runtime as Node 20 so Sparticuz knows to unpack AL2023 shared libraries (libnss3.so)
+if (process.env.VERCEL) {
+    process.env.AWS_LAMBDA_JS_RUNTIME = 'nodejs20.x';
+}
+
+const chromium = require('@sparticuz/chromium-min');
 const puppeteer = require('puppeteer-core');
 const ejs = require('ejs');
 const path = require('path');
@@ -65,17 +70,19 @@ module.exports = async (req, res) => {
 
         // Configuring Chromium
         // Using local chrome if standard puppeteer is available (dev mode)
-        // or sparticuz/chromium for Vercel
+        // or sparticuz/chromium-min downloading from github on Vercel
+        const isLocal = process.env.NODE_ENV === 'development' || !process.env.VERCEL;
 
-        let executablePath = await chromium.executablePath();
-        if (!executablePath) {
-            // Fallback for local development if chromium path isn't found
-            // This requires a local chrome installation or puppeteer's downloaded chrome
+        let executablePath = null;
+        if (!isLocal) {
+            executablePath = await chromium.executablePath(
+                'https://github.com/Sparticuz/chromium/releases/download/v131.0.1/chromium-v131.0.1-pack.tar'
+            );
+        } else {
             try {
-                const localPuppeteer = require('puppeteer');
-                executablePath = localPuppeteer.executablePath();
+                executablePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
             } catch (e) {
-                console.warn('Local puppeteer not found, using default path');
+                console.warn('Local chrome not found');
             }
         }
 

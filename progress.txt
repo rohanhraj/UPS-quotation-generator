@@ -1,0 +1,36 @@
+# Progress Log
+Run: 59346695-25c0-4f89-8000-ea806210accd
+Task: Update the 'Vinod Sir Project' PDF generation to match the reference PDF
+Started: 2026-02-11 12:55 PM
+
+## Codebase Patterns
+- Backend: Express/Node.js app using EJS for templating.
+- PDF Generation: Uses Puppeteer (likely in `api/generate.js`) to render EJS templates to PDF.
+- Frontend: Single-page app with `public/index.html` and `public/js/app.js`.
+- Template Data Binding: `getFormData()` in `app.js` collects data and sends to `/api/preview` or `/api/generate`.
+
+---
+## 2026-02-11 13:10 - US-001: Fix reference details bug
+- What was implemented:
+    - Updated `public/js/app.js` to explicitly capture the `referenceText` field in `getFormData`.
+    - Updated `views/quotation-template.ejs` to render `data.referenceText` within the reference box section, supporting line breaks.
+    - Added automated test in `tests/US-001.test.js`.
+- Files changed: `public/js/app.js`, `views/quotation-template.ejs`, `tests/US-001.test.js`
+- **Learnings:** The `referenceText` was being ignored by `getFormData` logic. Template needed EJS logic to handle the new property and format it for HTML.
+---
+## 2026-02-11 13:45 - US-002: Implement rich text formatting in UI
+- What was implemented:
+    - Set explicit heights (150px/200px) for Quill editors in `public/index.html` to improve visibility.
+    - Updated `views/quotation-template.ejs` to render HTML tags directly from rich text fields using `<%-` syntax.
+    - Added CSS support for standard HTML tags (ul, li) inside reference and technical details boxes in the EJS template.
+    - Added automated test in `tests/US-002.test.js`.
+- Files changed: `public/index.html`, `views/quotation-template.ejs`, `tests/US-002.test.js`
+- **Learnings:** Use `<%-` in EJS for fields coming from rich text editors to prevent escaping of styling tags (bold, color, etc.).
+---
+## 2026-02-11 13:15 - PR-001: Create Pull Request
+- What was implemented:
+    - Composed and submitted a pull request for the implementation of US-001 and US-002.
+    - Simplified `server.js` and aligned asset paths to `public/assets`.
+- Files changed: `server.js` (refactoring/simplification)
+- **Learnings:** Final cleanup and PR creation is the last step in the feature-dev workflow.
+---

@@ -7,8 +7,6 @@
     <title>ARVI Power - Quotation Generator</title>
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
 <body>
@@ -58,11 +56,37 @@
                     </div>
                     <div class="form-group full-width">
                         <label for="referenceText">Reference Details (Site visits, meetings, etc.)</label>
-                        <textarea id="referenceText" name="referenceText" rows="4" placeholder="Dear Sir/Madam,
-
-With reference to your enquiry and our site visit dated ________, we are pleased to submit our quotation for the following:
-
-[Add any other reference details here]"></textarea>
+                        <div class="rich-text-toolbar" id="refToolbar">
+                            <button type="button" class="toolbar-btn" id="boldBtn" title="Bold (Ctrl+B)"
+                                onclick="execFormat('bold')"><b>B</b></button>
+                            <button type="button" class="toolbar-btn" id="italicBtn" title="Italic (Ctrl+I)"
+                                onclick="execFormat('italic')"><i>I</i></button>
+                            <div class="toolbar-separator"></div>
+                            <button type="button" class="toolbar-btn" id="bulletBtn" title="Bullet List"
+                                onclick="execFormat('insertUnorderedList')">☰</button>
+                            <div class="toolbar-separator"></div>
+                            <label class="toolbar-label" for="fontSizeSelect">Size:</label>
+                            <select id="fontSizeSelect" class="toolbar-select" onchange="applyFontSize(this.value)">
+                                <option value="">Default</option>
+                                <option value="10px">10px</option>
+                                <option value="12px">12px</option>
+                                <option value="14px">14px</option>
+                                <option value="16px">16px</option>
+                                <option value="18px">18px</option>
+                                <option value="20px">20px</option>
+                                <option value="24px">24px</option>
+                                <option value="28px">28px</option>
+                                <option value="32px">32px</option>
+                            </select>
+                            <div class="toolbar-separator"></div>
+                            <label class="toolbar-label" for="fontColorInput">Color:</label>
+                            <input type="color" id="fontColorInput" class="toolbar-color" value="#000000"
+                                oninput="applyFontColor(this.value)" title="Font Color">
+                        </div>
+                        <div class="rich-text-editor" id="referenceText" contenteditable="true"
+                            data-placeholder="Dear Sir/Madam,&#10;&#10;With reference to your enquiry and our site visit dated ________, we are pleased to submit our quotation for the following:&#10;&#10;[Add any other reference details here]">
+                        </div>
+                        <input type="hidden" id="referenceTextHidden" name="referenceText">
                     </div>
                     <div class="form-grid cols-2">
                         <div class="form-group">
@@ -338,7 +362,7 @@ Power experts attribute this failure to the poor quality of power.
         <p>Generating PDF...</p>
     </div>
 
-    <script src="/js/app.js?v=2"></script>
+    <script src="/js/app.js"></script>
 </body>
 
 </html>
